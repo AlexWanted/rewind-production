@@ -3,22 +3,32 @@
 import { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp, query, writeBatch } from 'firebase/firestore';
 import { VideoData } from '@/components/VideoModal';
 import { PhotoData } from '@/components/PhotoModal';
-import { LogOut, Plus, Edit2, Trash2, X, Save, UploadCloud } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, X, Save, UploadCloud, GripVertical } from 'lucide-react';
+import { Reorder } from 'motion/react';
 
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'videos' | 'photos'>('videos');
+  const [activeTab, setActiveTab] = useState<'videos' | 'snippets' | 'photos'>('videos');
   
   const [videos, setVideos] = useState<VideoData[]>([]);
+  const [snippets, setSnippets] = useState<VideoData[]>([]);
   const [photos, setPhotos] = useState<PhotoData[]>([]);
   
   const [editingVideo, setEditingVideo] = useState<Partial<VideoData> | null>(null);
   const [editingPhoto, setEditingPhoto] = useState<Partial<PhotoData> | null>(null);
-  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
+  
+  // Deferred upload states
+  const [videoImageFile, setVideoImageFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -33,11 +43,28 @@ export default function AdminPage() {
 
   const fetchData = async () => {
     try {
-      const videosSnapshot = await getDocs(query(collection(db, 'videos'), orderBy('createdAt', 'desc')));
-      const photosSnapshot = await getDocs(query(collection(db, 'photos'), orderBy('createdAt', 'desc')));
+      const videosSnapshot = await getDocs(query(collection(db, 'videos')));
+      const photosSnapshot = await getDocs(query(collection(db, 'photos')));
       
-      setVideos(videosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)));
-      setPhotos(photosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)));
+      const allVideos = videosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+      allVideos.sort((a, b) => {
+        if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+        if (a.order !== undefined) return -1;
+        if (b.order !== undefined) return 1;
+        return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+      });
+
+      setVideos(allVideos.filter(v => v.category !== 'Snippet'));
+      setSnippets(allVideos.filter(v => v.category === 'Snippet'));
+
+      const allPhotos = photosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+      allPhotos.sort((a, b) => {
+        if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+        if (a.order !== undefined) return -1;
+        if (b.order !== undefined) return 1;
+        return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+      });
+      setPhotos(allPhotos);
     } catch (error) {
       console.error("Error fetching data:", error);
       alert("Error fetching data. Check console.");
@@ -50,65 +77,43 @@ export default function AdminPage() {
       await signInWithPopup(auth, provider);
     } catch (error: any) {
       console.error("Login Error:", error);
-      alert(`Login failed: ${error.message}. If you see "auth/unauthorized-domain", you need to add this website's URL to Firebase Authorized Domains.`);
+      alert(`Login failed: ${error.message}`);
     }
   };
 
   const handleLogout = () => signOut(auth);
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, folder: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const uploadFile = async (file: File, folder: string): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('folder', folder);
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload', true);
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const progress = (event.loaded / event.total) * 100;
-        setUploadProgress(prev => ({ ...prev, [field]: progress }));
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        const downloadURL = response.url;
-        if (folder === 'videos') {
-          setEditingVideo(prev => prev ? { ...prev, [field]: downloadURL } : null);
-        } else {
-          setEditingPhoto(prev => prev ? { ...prev, [field]: downloadURL } : null);
-        }
-        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-      } else {
-        console.error("Upload error:", xhr.responseText);
-        alert("Upload failed. Check server logs.");
-        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-      }
-    };
-
-    xhr.onerror = () => {
-      console.error("Upload error");
-      alert("Upload failed due to a network error.");
-      setUploadProgress(prev => ({ ...prev, [field]: 0 }));
-    };
-
-    xhr.send(formData);
+    if (!res.ok) throw new Error('Upload failed');
+    const data = await res.json();
+    return data.url;
   };
 
   const saveVideo = async () => {
     if (!editingVideo) return;
+    setIsSaving(true);
     try {
+      let imageUrl = editingVideo.image || '';
+      let videoUrl = editingVideo.videoUrl || '';
+
+      if (videoImageFile) imageUrl = await uploadFile(videoImageFile, 'videos');
+      if (videoFile) videoUrl = await uploadFile(videoFile, 'videos');
+
       const data = {
         title: editingVideo.title || '',
         artist: editingVideo.artist || '',
-        category: editingVideo.category || '',
-        image: editingVideo.image || '',
-        videoUrl: editingVideo.videoUrl || '',
+        category: activeTab === 'snippets' ? 'Snippet' : (editingVideo.category || ''),
+        image: imageUrl,
+        videoUrl: videoUrl,
         year: Number(editingVideo.year) || new Date().getFullYear(),
         director: editingVideo.director || '',
         cinematographer: editingVideo.cinematographer || '',
@@ -120,21 +125,28 @@ export default function AdminPage() {
       if (editingVideo.id) {
         await updateDoc(doc(db, 'videos', String(editingVideo.id)), data);
       } else {
-        await addDoc(collection(db, 'videos'), { ...data, createdAt: Timestamp.now() });
+        await addDoc(collection(db, 'videos'), { ...data, order: 999, createdAt: Timestamp.now() });
       }
-      setEditingVideo(null);
+      closeVideoEditor();
       fetchData();
     } catch (error) {
       console.error("Error saving video:", error);
       alert("Error saving video. Ensure all fields are filled correctly.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const savePhoto = async () => {
     if (!editingPhoto) return;
+    setIsSaving(true);
     try {
+      // Upload new photos
+      const newUrls = await Promise.all(photoFiles.map(f => uploadFile(f, 'photos')));
+      const allImages = [...(editingPhoto.images || []), ...newUrls];
+
       const data = {
-        src: editingPhoto.src || '',
+        images: allImages,
         alt: editingPhoto.alt || '',
         photographer: editingPhoto.photographer || '',
         location: editingPhoto.location || '',
@@ -145,13 +157,15 @@ export default function AdminPage() {
       if (editingPhoto.id) {
         await updateDoc(doc(db, 'photos', String(editingPhoto.id)), data);
       } else {
-        await addDoc(collection(db, 'photos'), { ...data, createdAt: Timestamp.now() });
+        await addDoc(collection(db, 'photos'), { ...data, order: 999, createdAt: Timestamp.now() });
       }
-      setEditingPhoto(null);
+      closePhotoEditor();
       fetchData();
     } catch (error) {
       console.error("Error saving photo:", error);
       alert("Error saving photo. Ensure all fields are filled correctly.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -165,6 +179,75 @@ export default function AdminPage() {
     }
   };
 
+  const saveOrder = async (collectionName: string, items: any[]) => {
+    setIsSavingOrder(true);
+    try {
+      const batch = writeBatch(db);
+      items.forEach((item, index) => {
+        const docRef = doc(db, collectionName, String(item.id));
+        batch.update(docRef, { order: index });
+      });
+      await batch.commit();
+      alert('Order saved successfully!');
+      fetchData();
+    } catch (error) {
+      console.error("Error saving order:", error);
+      alert("Failed to save order.");
+    } finally {
+      setIsSavingOrder(false);
+    }
+  };
+
+  const openVideoEditor = (video: Partial<VideoData> = {}) => {
+    setEditingVideo(video);
+    setVideoImageFile(null);
+    setVideoFile(null);
+  };
+
+  const closeVideoEditor = () => {
+    setEditingVideo(null);
+    setVideoImageFile(null);
+    setVideoFile(null);
+  };
+
+  const openPhotoEditor = (photo: Partial<PhotoData> = {}) => {
+    // Migrate old src to images array for editing
+    if (photo.src && (!photo.images || photo.images.length === 0)) {
+      photo.images = [photo.src];
+    }
+    setEditingPhoto(photo);
+    setPhotoFiles([]);
+    setPhotoPreviews([]);
+  };
+
+  const closePhotoEditor = () => {
+    setEditingPhoto(null);
+    setPhotoFiles([]);
+    setPhotoPreviews([]);
+  };
+
+  const handlePhotoFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setPhotoFiles(prev => [...prev, ...files]);
+      const previews = files.map(f => URL.createObjectURL(f));
+      setPhotoPreviews(prev => [...prev, ...previews]);
+    }
+  };
+
+  const removeNewPhoto = (index: number) => {
+    setPhotoFiles(prev => prev.filter((_, i) => i !== index));
+    setPhotoPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingPhoto = (index: number) => {
+    if (editingPhoto && editingPhoto.images) {
+      const newImages = [...editingPhoto.images];
+      newImages.splice(index, 1);
+      setEditingPhoto({ ...editingPhoto, images: newImages });
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-black text-white">Loading...</div>;
 
   if (!user) {
@@ -172,16 +255,55 @@ export default function AdminPage() {
       <div className="min-h-screen flex items-center justify-center bg-black text-white">
         <div className="text-center">
           <h1 className="text-4xl font-display uppercase mb-6">Admin Access</h1>
-          <button 
-            onClick={handleLogin}
-            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm transition-colors"
-          >
+          <button onClick={handleLogin} className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm transition-colors">
             Sign in with Google
           </button>
         </div>
       </div>
     );
   }
+
+  const renderList = (items: any[], setItems: any, collectionName: string, onEdit: (item: any) => void) => (
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-light capitalize">{activeTab}</h2>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => saveOrder(collectionName, items)}
+            disabled={isSavingOrder}
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-800 text-white hover:bg-zinc-700 transition-colors rounded-sm text-sm font-semibold disabled:opacity-50"
+          >
+            <Save size={16} /> Save Order
+          </button>
+          <button 
+            onClick={() => onEdit({})}
+            className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors rounded-sm text-sm font-semibold"
+          >
+            <Plus size={16} /> Add New
+          </button>
+        </div>
+      </div>
+
+      <Reorder.Group axis="y" values={items} onReorder={setItems} className="grid gap-4">
+        {items.map(item => (
+          <Reorder.Item key={item.id} value={item} className="bg-zinc-900 p-4 flex justify-between items-center rounded-sm cursor-grab active:cursor-grabbing">
+            <div className="flex items-center gap-4">
+              <GripVertical className="text-gray-600" />
+              <img src={item.image || item.images?.[0] || item.src} alt={item.title || item.alt} className="w-24 h-16 object-cover rounded-sm bg-zinc-800" />
+              <div>
+                <h3 className="font-semibold text-lg">{item.title || item.alt}</h3>
+                <p className="text-sm text-gray-400">{item.artist || item.location} {item.category ? `• ${item.category}` : ''}</p>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <button onPointerDown={(e) => e.stopPropagation()} onClick={() => onEdit(item)} className="p-2 hover:bg-zinc-800 rounded-sm text-blue-400"><Edit2 size={18} /></button>
+              <button onPointerDown={(e) => e.stopPropagation()} onClick={() => deleteItem(collectionName, String(item.id))} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
+            </div>
+          </Reorder.Item>
+        ))}
+      </Reorder.Group>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-8">
@@ -197,85 +319,14 @@ export default function AdminPage() {
         </div>
 
         <div className="flex gap-4 mb-8 border-b border-zinc-800 pb-4">
-          <button 
-            onClick={() => setActiveTab('videos')}
-            className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors ${activeTab === 'videos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}
-          >
-            Videos
-          </button>
-          <button 
-            onClick={() => setActiveTab('photos')}
-            className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors ${activeTab === 'photos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}
-          >
-            Photos
-          </button>
+          <button onClick={() => setActiveTab('videos')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors ${activeTab === 'videos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Videos</button>
+          <button onClick={() => setActiveTab('snippets')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors ${activeTab === 'snippets' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Snippets</button>
+          <button onClick={() => setActiveTab('photos')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors ${activeTab === 'photos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Photoshoots</button>
         </div>
 
-        {/* Videos Tab */}
-        {activeTab === 'videos' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-light">Video Projects</h2>
-              <button 
-                onClick={() => setEditingVideo({})}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors rounded-sm text-sm font-semibold"
-              >
-                <Plus size={16} /> Add Video
-              </button>
-            </div>
-
-            <div className="grid gap-4">
-              {videos.map(video => (
-                <div key={video.id} className="bg-zinc-900 p-4 flex justify-between items-center rounded-sm">
-                  <div className="flex items-center gap-4">
-                    <img src={video.image} alt={video.title} className="w-24 h-16 object-cover rounded-sm" />
-                    <div>
-                      <h3 className="font-semibold text-lg">{video.title}</h3>
-                      <p className="text-sm text-gray-400">{video.artist} • {video.category}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => setEditingVideo(video)} className="p-2 hover:bg-zinc-800 rounded-sm text-blue-400"><Edit2 size={18} /></button>
-                    <button onClick={() => deleteItem('videos', String(video.id))} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Photos Tab */}
-        {activeTab === 'photos' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-light">Photography</h2>
-              <button 
-                onClick={() => setEditingPhoto({})}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors rounded-sm text-sm font-semibold"
-              >
-                <Plus size={16} /> Add Photo
-              </button>
-            </div>
-
-            <div className="grid gap-4">
-              {photos.map(photo => (
-                <div key={photo.id} className="bg-zinc-900 p-4 flex justify-between items-center rounded-sm">
-                  <div className="flex items-center gap-4">
-                    <img src={photo.src} alt={photo.alt} className="w-16 h-16 object-cover rounded-sm" />
-                    <div>
-                      <h3 className="font-semibold text-lg">{photo.alt}</h3>
-                      <p className="text-sm text-gray-400">{photo.location} • {photo.date}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => setEditingPhoto(photo)} className="p-2 hover:bg-zinc-800 rounded-sm text-blue-400"><Edit2 size={18} /></button>
-                    <button onClick={() => deleteItem('photos', String(photo.id))} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {activeTab === 'videos' && renderList(videos, setVideos, 'videos', openVideoEditor)}
+        {activeTab === 'snippets' && renderList(snippets, setSnippets, 'videos', openVideoEditor)}
+        {activeTab === 'photos' && renderList(photos, setPhotos, 'photos', openPhotoEditor)}
 
         {/* Video Editor Modal */}
         {editingVideo && (
@@ -283,39 +334,41 @@ export default function AdminPage() {
             <div className="bg-zinc-900 p-8 rounded-sm w-full max-w-2xl my-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-display uppercase">{editingVideo.id ? 'Edit Video' : 'New Video'}</h2>
-                <button onClick={() => setEditingVideo(null)} className="text-gray-400 hover:text-white"><X size={24} /></button>
+                <button onClick={closeVideoEditor} className="text-gray-400 hover:text-white"><X size={24} /></button>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <input placeholder="Title" value={editingVideo.title || ''} onChange={e => setEditingVideo({...editingVideo, title: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Artist" value={editingVideo.artist || ''} onChange={e => setEditingVideo({...editingVideo, artist: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
-                <input placeholder="Category" value={editingVideo.category || ''} onChange={e => setEditingVideo({...editingVideo, category: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
+                {activeTab !== 'snippets' && (
+                  <input placeholder="Category" value={editingVideo.category || ''} onChange={e => setEditingVideo({...editingVideo, category: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
+                )}
                 
                 <div className="col-span-2 flex flex-col gap-2">
                   <label className="text-sm text-gray-400">Thumbnail Image</label>
-                  <div className="flex gap-2">
-                    <input placeholder="Image URL" value={editingVideo.image || ''} onChange={e => setEditingVideo({...editingVideo, image: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
-                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Image">
-                      <UploadCloud size={20} />
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'image', 'videos')} />
+                  <div className="flex gap-4 items-center">
+                    {(videoImageFile || editingVideo.image) && (
+                      <img src={videoImageFile ? URL.createObjectURL(videoImageFile) : editingVideo.image} alt="Preview" className="w-24 h-16 object-cover rounded-sm" />
+                    )}
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-sm flex items-center gap-2 transition-colors text-sm">
+                      <UploadCloud size={18} /> Select Image
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files && setVideoImageFile(e.target.files[0])} />
                     </label>
                   </div>
-                  {uploadProgress['image'] > 0 && uploadProgress['image'] < 100 && (
-                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['image']}%` }}></div></div>
-                  )}
                 </div>
 
                 <div className="col-span-2 flex flex-col gap-2">
                   <label className="text-sm text-gray-400">Video File</label>
-                  <div className="flex gap-2">
-                    <input placeholder="Video URL" value={editingVideo.videoUrl || ''} onChange={e => setEditingVideo({...editingVideo, videoUrl: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
-                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Video">
-                      <UploadCloud size={20} />
-                      <input type="file" accept="video/*" className="hidden" onChange={(e) => handleFileUpload(e, 'videoUrl', 'videos')} />
+                  <div className="flex gap-4 items-center">
+                    {(videoFile || editingVideo.videoUrl) && (
+                      <span className="text-sm text-green-400 truncate max-w-[200px]">
+                        {videoFile ? videoFile.name : 'Video uploaded'}
+                      </span>
+                    )}
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-sm flex items-center gap-2 transition-colors text-sm">
+                      <UploadCloud size={18} /> Select Video
+                      <input type="file" accept="video/*" className="hidden" onChange={(e) => e.target.files && setVideoFile(e.target.files[0])} />
                     </label>
                   </div>
-                  {uploadProgress['videoUrl'] > 0 && uploadProgress['videoUrl'] < 100 && (
-                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['videoUrl']}%` }}></div></div>
-                  )}
                 </div>
 
                 <input placeholder="Year" type="number" value={editingVideo.year || ''} onChange={e => setEditingVideo({...editingVideo, year: Number(e.target.value)})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
@@ -326,8 +379,10 @@ export default function AdminPage() {
                 <textarea placeholder="Description" value={editingVideo.description || ''} onChange={e => setEditingVideo({...editingVideo, description: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2 h-32" />
               </div>
               <div className="mt-6 flex justify-end gap-4">
-                <button onClick={() => setEditingVideo(null)} className="px-6 py-3 text-gray-400 hover:text-white">Cancel</button>
-                <button onClick={saveVideo} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm flex items-center gap-2"><Save size={18} /> Save</button>
+                <button onClick={closeVideoEditor} className="px-6 py-3 text-gray-400 hover:text-white">Cancel</button>
+                <button onClick={saveVideo} disabled={isSaving} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm flex items-center gap-2 disabled:opacity-50">
+                  <Save size={18} /> {isSaving ? 'Saving...' : 'Save'}
+                </button>
               </div>
             </div>
           </div>
@@ -338,33 +393,47 @@ export default function AdminPage() {
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-zinc-900 p-8 rounded-sm w-full max-w-2xl my-8">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-display uppercase">{editingPhoto.id ? 'Edit Photo' : 'New Photo'}</h2>
-                <button onClick={() => setEditingPhoto(null)} className="text-gray-400 hover:text-white"><X size={24} /></button>
+                <h2 className="text-2xl font-display uppercase">{editingPhoto.id ? 'Edit Photoshoot' : 'New Photoshoot'}</h2>
+                <button onClick={closePhotoEditor} className="text-gray-400 hover:text-white"><X size={24} /></button>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2 flex flex-col gap-2">
-                  <label className="text-sm text-gray-400">Photo Image</label>
-                  <div className="flex gap-2">
-                    <input placeholder="Image Source URL" value={editingPhoto.src || ''} onChange={e => setEditingPhoto({...editingPhoto, src: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
-                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Photo">
-                      <UploadCloud size={20} />
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'src', 'photos')} />
-                    </label>
+                  <label className="text-sm text-gray-400">Photos</label>
+                  
+                  <div className="flex flex-wrap gap-4 mb-2">
+                    {/* Existing Images */}
+                    {editingPhoto.images?.map((url, idx) => (
+                      <div key={`ext-${idx}`} className="relative group">
+                        <img src={url} alt="Preview" className="w-24 h-24 object-cover rounded-sm" />
+                        <button onClick={() => removeExistingPhoto(idx)} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
+                      </div>
+                    ))}
+                    {/* New Images */}
+                    {photoPreviews.map((url, idx) => (
+                      <div key={`new-${idx}`} className="relative group">
+                        <img src={url} alt="Preview" className="w-24 h-24 object-cover rounded-sm border-2 border-orange-500" />
+                        <button onClick={() => removeNewPhoto(idx)} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><X size={12} /></button>
+                      </div>
+                    ))}
                   </div>
-                  {uploadProgress['src'] > 0 && uploadProgress['src'] < 100 && (
-                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['src']}%` }}></div></div>
-                  )}
+
+                  <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-sm flex items-center justify-center gap-2 transition-colors text-sm w-full">
+                    <UploadCloud size={18} /> Add Photos
+                    <input type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoFiles} />
+                  </label>
                 </div>
 
-                <input placeholder="Alt Text / Title" value={editingPhoto.alt || ''} onChange={e => setEditingPhoto({...editingPhoto, alt: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
+                <input placeholder="Photoshoot Title" value={editingPhoto.alt || ''} onChange={e => setEditingPhoto({...editingPhoto, alt: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Photographer" value={editingPhoto.photographer || ''} onChange={e => setEditingPhoto({...editingPhoto, photographer: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Location" value={editingPhoto.location || ''} onChange={e => setEditingPhoto({...editingPhoto, location: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Date (e.g., Oct 2025)" value={editingPhoto.date || ''} onChange={e => setEditingPhoto({...editingPhoto, date: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Camera" value={editingPhoto.camera || ''} onChange={e => setEditingPhoto({...editingPhoto, camera: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
               </div>
               <div className="mt-6 flex justify-end gap-4">
-                <button onClick={() => setEditingPhoto(null)} className="px-6 py-3 text-gray-400 hover:text-white">Cancel</button>
-                <button onClick={savePhoto} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm flex items-center gap-2"><Save size={18} /> Save</button>
+                <button onClick={closePhotoEditor} className="px-6 py-3 text-gray-400 hover:text-white">Cancel</button>
+                <button onClick={savePhoto} disabled={isSaving} className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm flex items-center gap-2 disabled:opacity-50">
+                  <Save size={18} /> {isSaving ? 'Saving...' : 'Save'}
+                </button>
               </div>
             </div>
           </div>

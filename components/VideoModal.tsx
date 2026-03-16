@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { useEffect } from 'react';
 
 export type VideoData = {
-  id: number;
+  id: string;
   title: string;
   artist: string;
   category: string;
@@ -17,6 +17,7 @@ export type VideoData = {
   editor: string;
   producer: string;
   description: string;
+  order?: number;
 };
 
 interface VideoModalProps {
@@ -61,7 +62,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
             src={video.videoUrl}
             controls
             autoPlay
-            className="w-full h-full object-contain max-h-[50vh] lg:max-h-[90vh]"
+            className="w-full h-full object-contain max-h-[70vh] lg:max-h-[90vh]"
             controlsList="nodownload"
           />
         </div>

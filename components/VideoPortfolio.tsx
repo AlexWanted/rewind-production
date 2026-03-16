@@ -11,7 +11,7 @@ import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
 const fallbackVideos: VideoData[] = [
   {
-    id: 1,
+    id: '1',
     title: 'Neon Dreams',
     artist: 'The Midnight Echoes',
     category: 'Music Video',
@@ -25,7 +25,7 @@ const fallbackVideos: VideoData[] = [
     description: 'A cyberpunk-inspired visual journey through the neon-lit streets of a futuristic metropolis. Shot on location in Tokyo.'
   },
   {
-    id: 2,
+    id: '2',
     title: 'Acoustic Session',
     artist: 'Sarah Jenkins',
     category: 'Live Performance',
@@ -39,7 +39,7 @@ const fallbackVideos: VideoData[] = [
     description: 'An intimate, one-take acoustic performance recorded live at Soundscape Studios.'
   },
   {
-    id: 3,
+    id: '3',
     title: 'Rhythm & Flow',
     artist: 'DJ Pulse',
     category: 'Tour Visuals',
@@ -53,7 +53,7 @@ const fallbackVideos: VideoData[] = [
     description: "High-energy, abstract tour visuals created for DJ Pulse's 2025 World Tour."
   },
   {
-    id: 4,
+    id: '4',
     title: 'Urban Symphony',
     artist: 'City Lights',
     category: 'Music Video',
@@ -76,10 +76,18 @@ export default function VideoPortfolio() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const q = query(collection(db, 'videos'), orderBy('createdAt', 'desc'), limit(4));
+        const q = query(collection(db, 'videos'));
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
-          setVideos(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)));
+          let fetchedVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+          fetchedVideos = fetchedVideos.filter(v => v.category !== 'Snippet');
+          fetchedVideos.sort((a, b) => {
+            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+            if (a.order !== undefined) return -1;
+            if (b.order !== undefined) return 1;
+            return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+          });
+          setVideos(fetchedVideos.slice(0, 4));
         } else {
           setVideos(fallbackVideos);
         }

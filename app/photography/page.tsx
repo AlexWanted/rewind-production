@@ -17,10 +17,17 @@ export default function PhotographyPage() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const q = query(collection(db, 'photos'), orderBy('createdAt', 'desc'));
+        const q = query(collection(db, 'photos'));
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
-          setPhotos(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)));
+          const fetchedPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+          fetchedPhotos.sort((a, b) => {
+            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+            if (a.order !== undefined) return -1;
+            if (b.order !== undefined) return 1;
+            return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+          });
+          setPhotos(fetchedPhotos);
         }
       } catch (error) {
         console.error("Error fetching photos:", error);
@@ -62,7 +69,7 @@ export default function PhotographyPage() {
                   className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
                 >
                   <Image
-                    src={photo.src}
+                    src={photo.images?.[0] || photo.src || ''}
                     alt={photo.alt}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"

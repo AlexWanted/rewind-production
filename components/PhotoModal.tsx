@@ -1,18 +1,20 @@
 'use client';
 
-import { motion } from 'motion/react';
-import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export type PhotoData = {
-  id: number;
-  src: string;
+  id: string;
+  images: string[];
+  src?: string; // For backwards compatibility
   alt: string;
   photographer?: string;
   location?: string;
   date?: string;
   camera?: string;
+  order?: number;
 };
 
 interface PhotoModalProps {
@@ -21,13 +23,25 @@ interface PhotoModalProps {
 }
 
 export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
-  // Блокируем скролл страницы при открытом модальном окне
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = photo.images?.length > 0 ? photo.images : (photo.src ? [photo.src] : []);
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, []);
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   return (
     <motion.div
@@ -52,21 +66,61 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
         className="w-full max-w-7xl bg-zinc-950 border border-white/10 rounded-sm overflow-hidden flex flex-col lg:flex-row shadow-2xl max-h-[90vh]"
       >
         {/* Секция с изображением */}
-        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[50vh] lg:min-h-[80vh]">
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            fill
-            className="object-contain"
-            referrerPolicy="no-referrer"
-          />
+        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[50vh] lg:min-h-[80vh] group">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0"
+            >
+              {images[currentIndex] && (
+                <Image
+                  src={images[currentIndex]}
+                  alt={`${photo.alt} - Image ${currentIndex + 1}`}
+                  fill
+                  className="object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-4 p-2 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={nextImage}
+                className="absolute right-4 p-2 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80"
+              >
+                <ChevronRight size={24} />
+              </button>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {images.map((_, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-2 h-2 rounded-full transition-colors ${
+                      idx === currentIndex ? 'bg-white' : 'bg-white/30'
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Секция с информацией о фото */}
         <div className="w-full lg:w-1/3 p-8 lg:p-10 flex flex-col overflow-y-auto">
           <div className="mb-6">
             <span className="text-[10px] uppercase tracking-[0.2em] text-orange-500 font-semibold mb-2 block">
-              Photography • {photo.date || '2025'}
+              Photoshoot • {photo.date || '2025'}
             </span>
             <h2 className="text-3xl font-display uppercase tracking-wider mb-1 text-white">
               {photo.alt}

@@ -1,6 +1,6 @@
 {
-  "/api/upload/route": "/api/upload",
   "/_not-found/page": "/_not-found",
+  "/api/upload/route": "/api/upload",
   "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/admin/page": "/admin",
   "/page": "/",

@@ -9,11 +9,11 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
 const fallbackPhotos: PhotoData[] = [
-  { id: 1, src: 'https://picsum.photos/seed/band1/600/800', alt: 'Band Portrait', photographer: 'Alex Mercer', location: 'Studio A', date: 'Oct 2025', camera: 'Leica Q2' },
-  { id: 2, src: 'https://picsum.photos/seed/live1/800/600', alt: 'Live Show Energy', photographer: 'Jordan Lee', location: 'The Roxy', date: 'Sep 2025', camera: 'Sony A7S III' },
-  { id: 3, src: 'https://picsum.photos/seed/studio1/600/600', alt: 'Studio Session', photographer: 'Elena Rostova', location: 'Soundscape Studios', date: 'Aug 2025', camera: 'Canon EOS R5' },
-  { id: 4, src: 'https://picsum.photos/seed/backstage1/600/600', alt: 'Backstage Moments', photographer: 'Alex Mercer', location: 'Hollywood Bowl', date: 'Jul 2025', camera: 'Fujifilm X-T4' },
-  { id: 5, src: 'https://picsum.photos/seed/live2/800/600', alt: 'Crowd Surfing', photographer: 'Jordan Lee', location: 'Coachella', date: 'Apr 2025', camera: 'Sony A7S III' },
+  { id: '1', images: ['https://picsum.photos/seed/band1/600/800'], alt: 'Band Portrait', photographer: 'Alex Mercer', location: 'Studio A', date: 'Oct 2025', camera: 'Leica Q2' },
+  { id: '2', images: ['https://picsum.photos/seed/live1/800/600'], alt: 'Live Show Energy', photographer: 'Jordan Lee', location: 'The Roxy', date: 'Sep 2025', camera: 'Sony A7S III' },
+  { id: '3', images: ['https://picsum.photos/seed/studio1/600/600'], alt: 'Studio Session', photographer: 'Elena Rostova', location: 'Soundscape Studios', date: 'Aug 2025', camera: 'Canon EOS R5' },
+  { id: '4', images: ['https://picsum.photos/seed/backstage1/600/600'], alt: 'Backstage Moments', photographer: 'Alex Mercer', location: 'Hollywood Bowl', date: 'Jul 2025', camera: 'Fujifilm X-T4' },
+  { id: '5', images: ['https://picsum.photos/seed/live2/800/600'], alt: 'Crowd Surfing', photographer: 'Jordan Lee', location: 'Coachella', date: 'Apr 2025', camera: 'Sony A7S III' },
 ];
 
 export default function PhotoPortfolio() {
@@ -24,10 +24,17 @@ export default function PhotoPortfolio() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const q = query(collection(db, 'photos'), orderBy('createdAt', 'desc'), limit(5));
+        const q = query(collection(db, 'photos'));
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
-          setPhotos(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any)));
+          let fetchedPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+          fetchedPhotos.sort((a, b) => {
+            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+            if (a.order !== undefined) return -1;
+            if (b.order !== undefined) return 1;
+            return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+          });
+          setPhotos(fetchedPhotos.slice(0, 5));
         } else {
           setPhotos(fallbackPhotos);
         }
@@ -74,7 +81,7 @@ export default function PhotoPortfolio() {
                 className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
               >
                 <Image
-                  src={photo.src}
+                  src={photo.images?.[0] || photo.src || ''}
                   alt={photo.alt}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
