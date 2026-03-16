@@ -13,5 +13,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/rewindthetapeproduction
+            cd /var/www/rewind-production
             git pull origin main
