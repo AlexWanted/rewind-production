@@ -1,0 +1,70 @@
+'use client';
+
+import { motion } from 'motion/react';
+import Image from 'next/image';
+
+export default function About() {
+  return (
+    <section id="about" className="py-32 bg-zinc-950 relative overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8 }}
+            className="lg:w-1/2 relative aspect-[4/5] w-full max-w-md mx-auto"
+          >
+            <div className="absolute inset-0 bg-orange-500/20 translate-x-4 translate-y-4 rounded-sm" />
+            <Image
+              src="https://picsum.photos/seed/director/800/1000"
+              alt="Director on set"
+              fill
+              className="object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-md px-6 py-4 border border-white/10">
+              <p className="text-display uppercase tracking-widest text-sm text-orange-500 mb-1">Founded 2018</p>
+              <p className="text-white font-light text-xs uppercase tracking-wider">Based in Los Angeles</p>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="lg:w-1/2"
+          >
+            <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-8">
+              The <span className="text-orange-500">Crew</span>
+            </h2>
+            
+            <div className="space-y-6 text-gray-400 font-light leading-relaxed text-lg">
+              <p>
+                Rewind Production was born out of a shared obsession with music and cinema. We are a collective of directors, cinematographers, and editors dedicated to translating sound into striking visuals.
+              </p>
+              <p>
+                We believe that every artist has a unique frequency. Our job is to tune into that frequency and build a visual world around it. Whether it&apos;s a gritty underground hip-hop video or a sweeping cinematic piece for an indie rock band, we approach every project with the same level of passion and precision.
+              </p>
+              <p>
+                Over the past five years, we&apos;ve collaborated with emerging talents and established icons, helping them tell their stories through the lens.
+              </p>
+            </div>
+
+            <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-12">
+              <div>
+                <p className="text-4xl font-display text-white mb-2">150+</p>
+                <p className="text-xs uppercase tracking-widest text-orange-500">Music Videos</p>
+              </div>
+              <div>
+                <p className="text-4xl font-display text-white mb-2">50M+</p>
+                <p className="text-xs uppercase tracking-widest text-orange-500">YouTube Views</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

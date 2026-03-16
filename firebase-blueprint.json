@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "Video": {
+      "title": "Video",
+      "description": "A video project in the portfolio",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Title of the video" },
+        "artist": { "type": "string", "description": "Artist name" },
+        "category": { "type": "string", "description": "Category (e.g., Music Video)" },
+        "image": { "type": "string", "description": "URL to the thumbnail image" },
+        "videoUrl": { "type": "string", "description": "URL to the video file" },
+        "year": { "type": "number", "description": "Release year" },
+        "director": { "type": "string", "description": "Director name" },
+        "cinematographer": { "type": "string", "description": "Cinematographer name" },
+        "editor": { "type": "string", "description": "Editor name" },
+        "producer": { "type": "string", "description": "Producer name" },
+        "description": { "type": "string", "description": "Description of the video" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["title", "artist", "category", "image", "videoUrl", "year", "director", "cinematographer", "editor", "producer", "description", "createdAt"]
+    },
+    "Photo": {
+      "title": "Photo",
+      "description": "A photo in the portfolio",
+      "type": "object",
+      "properties": {
+        "src": { "type": "string", "description": "URL to the photo" },
+        "alt": { "type": "string", "description": "Alt text/title" },
+        "span": { "type": "string", "description": "Tailwind grid span classes" },
+        "photographer": { "type": "string", "description": "Photographer name" },
+        "location": { "type": "string", "description": "Location of the shoot" },
+        "date": { "type": "string", "description": "Date of the shoot" },
+        "camera": { "type": "string", "description": "Camera used" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["src", "alt", "span", "photographer", "location", "date", "camera", "createdAt"]
+    }
+  },
+  "firestore": {
+    "videos": {
+      "schema": { "$ref": "#/entities/Video" },
+      "description": "Collection of video projects"
+    },
+    "photos": {
+      "schema": { "$ref": "#/entities/Photo" },
+      "description": "Collection of photography projects"
+    }
+  }
+}

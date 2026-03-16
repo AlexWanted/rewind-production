@@ -1,0 +1,123 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: videos
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, max 100 chars)
+    //   - artist: string (required, max 100 chars)
+    //   - category: string (required, max 50 chars)
+    //   - image: string (required, valid URL)
+    //   - videoUrl: string (required, valid URL)
+    //   - year: number (required, > 1900)
+    //   - director: string (required, max 100 chars)
+    //   - cinematographer: string (required, max 100 chars)
+    //   - editor: string (required, max 100 chars)
+    //   - producer: string (required, max 100 chars)
+    //   - description: string (required, max 1000 chars)
+    //   - createdAt: timestamp (required, immutable)
+    //
+    // Collection: photos
+    // Document ID: auto-generated
+    // Fields:
+    //   - src: string (required, valid URL)
+    //   - alt: string (required, max 100 chars)
+    //   - span: string (required, max 50 chars)
+    //   - photographer: string (required, max 100 chars)
+    //   - location: string (required, max 100 chars)
+    //   - date: string (required, max 50 chars)
+    //   - camera: string (required, max 100 chars)
+    //   - createdAt: timestamp (required, immutable)
+    //
+    // Collection: users
+    // Document ID: user UID
+    // Fields:
+    //   - role: string (required, 'admin')
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+          (request.auth.token.email == "rewindproductionboss@gmail.com" && request.auth.token.email_verified == true)
+        );
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*")) && url.size() < 500;
+    }
+
+    function hasOnlyAllowedFields(allowedFields) {
+      return request.resource.data.keys().hasOnly(allowedFields);
+    }
+
+    function isValidVideo(data) {
+      return hasOnlyAllowedFields(['title', 'artist', 'category', 'image', 'videoUrl', 'year', 'director', 'cinematographer', 'editor', 'producer', 'description', 'createdAt']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.artist is string && data.artist.size() > 0 && data.artist.size() <= 100 &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 50 &&
+             isValidUrl(data.image) &&
+             isValidUrl(data.videoUrl) &&
+             data.year is number && data.year > 1900 && data.year < 2100 &&
+             data.director is string && data.director.size() > 0 && data.director.size() <= 100 &&
+             data.cinematographer is string && data.cinematographer.size() > 0 && data.cinematographer.size() <= 100 &&
+             data.editor is string && data.editor.size() > 0 && data.editor.size() <= 100 &&
+             data.producer is string && data.producer.size() > 0 && data.producer.size() <= 100 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 1000 &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidPhoto(data) {
+      return hasOnlyAllowedFields(['src', 'alt', 'span', 'photographer', 'location', 'date', 'camera', 'createdAt']) &&
+             isValidUrl(data.src) &&
+             data.alt is string && data.alt.size() > 0 && data.alt.size() <= 100 &&
+             data.span is string && data.span.size() > 0 && data.span.size() <= 50 &&
+             data.photographer is string && data.photographer.size() > 0 && data.photographer.size() <= 100 &&
+             data.location is string && data.location.size() > 0 && data.location.size() <= 100 &&
+             data.date is string && data.date.size() > 0 && data.date.size() <= 50 &&
+             data.camera is string && data.camera.size() > 0 && data.camera.size() <= 100 &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create, update: if isAdmin() && 
+                            hasOnlyAllowedFields(['role']) && 
+                            request.resource.data.role == 'admin';
+      allow delete: if isAdmin() && request.auth.uid != userId; // Cannot delete self
+    }
+
+    match /videos/{videoId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidVideo(request.resource.data);
+      allow update: if isAdmin() && isValidVideo(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+
+    match /photos/{photoId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidPhoto(request.resource.data);
+      allow update: if isAdmin() && isValidPhoto(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isAdmin();
+    }
+  }
+}
