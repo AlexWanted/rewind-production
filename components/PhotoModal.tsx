@@ -9,7 +9,6 @@ export type PhotoData = {
   id: number;
   src: string;
   alt: string;
-  span: string;
   photographer?: string;
   location?: string;
   date?: string;

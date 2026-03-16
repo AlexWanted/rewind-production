@@ -136,7 +136,6 @@ export default function AdminPage() {
       const data = {
         src: editingPhoto.src || '',
         alt: editingPhoto.alt || '',
-        span: editingPhoto.span || 'col-span-1 row-span-1',
         photographer: editingPhoto.photographer || '',
         location: editingPhoto.location || '',
         date: editingPhoto.date || '',
@@ -358,7 +357,6 @@ export default function AdminPage() {
                 </div>
 
                 <input placeholder="Alt Text / Title" value={editingPhoto.alt || ''} onChange={e => setEditingPhoto({...editingPhoto, alt: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
-                <input placeholder="Grid Span (e.g., col-span-1 row-span-2)" value={editingPhoto.span || ''} onChange={e => setEditingPhoto({...editingPhoto, span: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Photographer" value={editingPhoto.photographer || ''} onChange={e => setEditingPhoto({...editingPhoto, photographer: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Location" value={editingPhoto.location || ''} onChange={e => setEditingPhoto({...editingPhoto, location: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Date (e.g., Oct 2025)" value={editingPhoto.date || ''} onChange={e => setEditingPhoto({...editingPhoto, date: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />

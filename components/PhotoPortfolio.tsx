@@ -9,11 +9,11 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
 const fallbackPhotos: PhotoData[] = [
-  { id: 1, src: 'https://picsum.photos/seed/band1/600/800', alt: 'Band Portrait', span: 'col-span-1 row-span-2', photographer: 'Alex Mercer', location: 'Studio A', date: 'Oct 2025', camera: 'Leica Q2' },
-  { id: 2, src: 'https://picsum.photos/seed/live1/800/600', alt: 'Live Show Energy', span: 'col-span-2 row-span-1', photographer: 'Jordan Lee', location: 'The Roxy', date: 'Sep 2025', camera: 'Sony A7S III' },
-  { id: 3, src: 'https://picsum.photos/seed/studio1/600/600', alt: 'Studio Session', span: 'col-span-1 row-span-1', photographer: 'Elena Rostova', location: 'Soundscape Studios', date: 'Aug 2025', camera: 'Canon EOS R5' },
-  { id: 4, src: 'https://picsum.photos/seed/backstage1/600/600', alt: 'Backstage Moments', span: 'col-span-1 row-span-1', photographer: 'Alex Mercer', location: 'Hollywood Bowl', date: 'Jul 2025', camera: 'Fujifilm X-T4' },
-  { id: 5, src: 'https://picsum.photos/seed/live2/800/600', alt: 'Crowd Surfing', span: 'col-span-2 row-span-1', photographer: 'Jordan Lee', location: 'Coachella', date: 'Apr 2025', camera: 'Sony A7S III' },
+  { id: 1, src: 'https://picsum.photos/seed/band1/600/800', alt: 'Band Portrait', photographer: 'Alex Mercer', location: 'Studio A', date: 'Oct 2025', camera: 'Leica Q2' },
+  { id: 2, src: 'https://picsum.photos/seed/live1/800/600', alt: 'Live Show Energy', photographer: 'Jordan Lee', location: 'The Roxy', date: 'Sep 2025', camera: 'Sony A7S III' },
+  { id: 3, src: 'https://picsum.photos/seed/studio1/600/600', alt: 'Studio Session', photographer: 'Elena Rostova', location: 'Soundscape Studios', date: 'Aug 2025', camera: 'Canon EOS R5' },
+  { id: 4, src: 'https://picsum.photos/seed/backstage1/600/600', alt: 'Backstage Moments', photographer: 'Alex Mercer', location: 'Hollywood Bowl', date: 'Jul 2025', camera: 'Fujifilm X-T4' },
+  { id: 5, src: 'https://picsum.photos/seed/live2/800/600', alt: 'Crowd Surfing', photographer: 'Jordan Lee', location: 'Coachella', date: 'Apr 2025', camera: 'Sony A7S III' },
 ];
 
 export default function PhotoPortfolio() {
@@ -71,7 +71,7 @@ export default function PhotoPortfolio() {
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => setSelectedPhoto(photo)}
-                className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer ${photo.span}`}
+                className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
               >
                 <Image
                   src={photo.src}

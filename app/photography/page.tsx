@@ -59,7 +59,7 @@ export default function PhotographyPage() {
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   onClick={() => setSelectedPhoto(photo)}
-                  className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer ${photo.span}`}
+                  className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
                 >
                   <Image
                     src={photo.src}
