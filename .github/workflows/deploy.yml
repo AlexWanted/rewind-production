@@ -15,3 +15,4 @@ jobs:
           script: |
             cd /var/www/rewind-production
             git pull origin main
+            pm2 restart rewind-app

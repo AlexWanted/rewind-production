@@ -6,7 +6,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User 
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, Timestamp, query, orderBy } from 'firebase/firestore';
 import { VideoData } from '@/components/VideoModal';
 import { PhotoData } from '@/components/PhotoModal';
-import { LogOut, Plus, Edit2, Trash2, X, Save } from 'lucide-react';
+import { LogOut, Plus, Edit2, Trash2, X, Save, UploadCloud } from 'lucide-react';
 
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -18,6 +18,7 @@ export default function AdminPage() {
   
   const [editingVideo, setEditingVideo] = useState<Partial<VideoData> | null>(null);
   const [editingPhoto, setEditingPhoto] = useState<Partial<PhotoData> | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -47,12 +48,57 @@ export default function AdminPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login Error:", error);
+      alert(`Login failed: ${error.message}. If you see "auth/unauthorized-domain", you need to add this website's URL to Firebase Authorized Domains.`);
     }
   };
 
   const handleLogout = () => signOut(auth);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, folder: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', folder);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload', true);
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = (event.loaded / event.total) * 100;
+        setUploadProgress(prev => ({ ...prev, [field]: progress }));
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        const downloadURL = response.url;
+        if (folder === 'videos') {
+          setEditingVideo(prev => prev ? { ...prev, [field]: downloadURL } : null);
+        } else {
+          setEditingPhoto(prev => prev ? { ...prev, [field]: downloadURL } : null);
+        }
+        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+      } else {
+        console.error("Upload error:", xhr.responseText);
+        alert("Upload failed. Check server logs.");
+        setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+      }
+    };
+
+    xhr.onerror = () => {
+      console.error("Upload error");
+      alert("Upload failed due to a network error.");
+      setUploadProgress(prev => ({ ...prev, [field]: 0 }));
+    };
+
+    xhr.send(formData);
+  };
 
   const saveVideo = async () => {
     if (!editingVideo) return;
@@ -244,8 +290,35 @@ export default function AdminPage() {
                 <input placeholder="Title" value={editingVideo.title || ''} onChange={e => setEditingVideo({...editingVideo, title: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Artist" value={editingVideo.artist || ''} onChange={e => setEditingVideo({...editingVideo, artist: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Category" value={editingVideo.category || ''} onChange={e => setEditingVideo({...editingVideo, category: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
-                <input placeholder="Image URL" value={editingVideo.image || ''} onChange={e => setEditingVideo({...editingVideo, image: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
-                <input placeholder="Video URL" value={editingVideo.videoUrl || ''} onChange={e => setEditingVideo({...editingVideo, videoUrl: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
+                
+                <div className="col-span-2 flex flex-col gap-2">
+                  <label className="text-sm text-gray-400">Thumbnail Image</label>
+                  <div className="flex gap-2">
+                    <input placeholder="Image URL" value={editingVideo.image || ''} onChange={e => setEditingVideo({...editingVideo, image: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Image">
+                      <UploadCloud size={20} />
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'image', 'videos')} />
+                    </label>
+                  </div>
+                  {uploadProgress['image'] > 0 && uploadProgress['image'] < 100 && (
+                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['image']}%` }}></div></div>
+                  )}
+                </div>
+
+                <div className="col-span-2 flex flex-col gap-2">
+                  <label className="text-sm text-gray-400">Video File</label>
+                  <div className="flex gap-2">
+                    <input placeholder="Video URL" value={editingVideo.videoUrl || ''} onChange={e => setEditingVideo({...editingVideo, videoUrl: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Video">
+                      <UploadCloud size={20} />
+                      <input type="file" accept="video/*" className="hidden" onChange={(e) => handleFileUpload(e, 'videoUrl', 'videos')} />
+                    </label>
+                  </div>
+                  {uploadProgress['videoUrl'] > 0 && uploadProgress['videoUrl'] < 100 && (
+                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['videoUrl']}%` }}></div></div>
+                  )}
+                </div>
+
                 <input placeholder="Year" type="number" value={editingVideo.year || ''} onChange={e => setEditingVideo({...editingVideo, year: Number(e.target.value)})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Director" value={editingVideo.director || ''} onChange={e => setEditingVideo({...editingVideo, director: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 <input placeholder="Cinematographer" value={editingVideo.cinematographer || ''} onChange={e => setEditingVideo({...editingVideo, cinematographer: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
@@ -270,7 +343,20 @@ export default function AdminPage() {
                 <button onClick={() => setEditingPhoto(null)} className="text-gray-400 hover:text-white"><X size={24} /></button>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <input placeholder="Image Source URL" value={editingPhoto.src || ''} onChange={e => setEditingPhoto({...editingPhoto, src: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
+                <div className="col-span-2 flex flex-col gap-2">
+                  <label className="text-sm text-gray-400">Photo Image</label>
+                  <div className="flex gap-2">
+                    <input placeholder="Image Source URL" value={editingPhoto.src || ''} onChange={e => setEditingPhoto({...editingPhoto, src: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm flex-1" />
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 p-3 rounded-sm flex items-center justify-center transition-colors" title="Upload Photo">
+                      <UploadCloud size={20} />
+                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, 'src', 'photos')} />
+                    </label>
+                  </div>
+                  {uploadProgress['src'] > 0 && uploadProgress['src'] < 100 && (
+                    <div className="w-full bg-zinc-800 h-1 mt-1"><div className="bg-orange-500 h-1 transition-all" style={{ width: `${uploadProgress['src']}%` }}></div></div>
+                  )}
+                </div>
+
                 <input placeholder="Alt Text / Title" value={editingPhoto.alt || ''} onChange={e => setEditingPhoto({...editingPhoto, alt: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Grid Span (e.g., col-span-1 row-span-2)" value={editingPhoto.span || ''} onChange={e => setEditingPhoto({...editingPhoto, span: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Photographer" value={editingPhoto.photographer || ''} onChange={e => setEditingPhoto({...editingPhoto, photographer: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
