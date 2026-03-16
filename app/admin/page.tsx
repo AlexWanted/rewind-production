@@ -72,7 +72,7 @@ export default function AdminPage() {
       };
 
       if (editingVideo.id) {
-        await updateDoc(doc(db, 'videos', editingVideo.id as string), data);
+        await updateDoc(doc(db, 'videos', String(editingVideo.id)), data);
       } else {
         await addDoc(collection(db, 'videos'), { ...data, createdAt: Timestamp.now() });
       }
@@ -98,7 +98,7 @@ export default function AdminPage() {
       };
 
       if (editingPhoto.id) {
-        await updateDoc(doc(db, 'photos', editingPhoto.id as string), data);
+        await updateDoc(doc(db, 'photos', String(editingPhoto.id)), data);
       } else {
         await addDoc(collection(db, 'photos'), { ...data, createdAt: Timestamp.now() });
       }
@@ -191,7 +191,7 @@ export default function AdminPage() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => setEditingVideo(video)} className="p-2 hover:bg-zinc-800 rounded-sm text-blue-400"><Edit2 size={18} /></button>
-                    <button onClick={() => deleteItem('videos', video.id as string)} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
+                    <button onClick={() => deleteItem('videos', String(video.id))} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
                   </div>
                 </div>
               ))}
@@ -224,7 +224,7 @@ export default function AdminPage() {
                   </div>
                   <div className="flex gap-2">
                     <button onClick={() => setEditingPhoto(photo)} className="p-2 hover:bg-zinc-800 rounded-sm text-blue-400"><Edit2 size={18} /></button>
-                    <button onClick={() => deleteItem('photos', photo.id as string)} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
+                    <button onClick={() => deleteItem('photos', String(photo.id))} className="p-2 hover:bg-zinc-800 rounded-sm text-red-400"><Trash2 size={18} /></button>
                   </div>
                 </div>
               ))}
