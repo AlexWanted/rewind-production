@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navLinks = [
-  { name: 'Work', href: '/#work' },
-  { name: 'Photos', href: '/#photos' },
-  { name: 'Services', href: '/#services' },
-  { name: 'About', href: '/#about' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'Работы', href: '/#work' },
+  { name: 'Фото', href: '/#photos' },
+  { name: 'Услуги', href: '/#services' },
+  { name: 'О нас', href: '/#about' },
+  { name: 'Контакты', href: '/#contact' },
 ];
 
 export default function Navbar() {

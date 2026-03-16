@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <Image
           src="https://picsum.photos/seed/concert/1920/1080?blur=2"
-          alt="Concert Background"
+          alt="Showreel Background"
           fill
           className="object-cover opacity-40"
           priority
@@ -22,7 +22,7 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center">
-        <motion.div
+        /*! <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -30,9 +30,9 @@ export default function Hero() {
         >
           <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
           <span className="text-xs font-medium uppercase tracking-widest text-gray-300">
-            Now Booking 2026
+            Открыта запись на 2026
           </span>
-        </motion.div>
+        </motion.div> */
 
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
@@ -40,9 +40,9 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
           className="text-6xl md:text-8xl lg:text-9xl font-display uppercase tracking-tighter leading-[0.85] mb-8"
         >
-          Visuals That <br />
+          Визуал, Который <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
-            Speak Louder
+            Говорит Громче
           </span>
         </motion.h1>
 
@@ -52,7 +52,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
           className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 font-light"
         >
-          We craft cinematic music videos, live sessions, and visual identities for artists who want to leave a mark.
+          Мы создаем кинематографичные музыкальные клипы, live-сессии и визуальную айдентику для артистов, которые хотят оставить след.
         </motion.p>
 
         <motion.div
@@ -65,25 +65,25 @@ export default function Hero() {
             href="#work"
             className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm"
           >
-            View Our Work
+            Наши Работы
           </a>
           <button className="group flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
             <PlayCircle size={48} strokeWidth={1} className="group-hover:scale-110 transition-transform duration-300 text-orange-500" />
-            <span className="text-sm font-medium uppercase tracking-widest">Showreel</span>
+            <span className="text-sm font-medium uppercase tracking-widest">Шоурил</span>
           </button>
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.div
+      { /* Scroll indicator */ }
+      /*! <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500">Scroll</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500">Вниз</span>
         <div className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent" />
-      </motion.div>
+      </motion.div> */
     </section>
   );
 }

@@ -1,26 +1,27 @@
 import type {Metadata} from 'next';
-import { Inter, Anton } from 'next/font/google';
+import { Roboto_Condensed } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
+const roboto = Roboto_Condensed ({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-roboto-condensed',
+  display: 'swap',
 });
 
-const anton = Anton({
+/* const anton = Anton({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-display',
-});
+}); */
 
 export const metadata: Metadata = {
-  title: 'Rewind Production | Music Video Creators',
-  description: 'Cinematic video production for musicians and artists.',
+  title: 'rewind production | видеопродакшн для музыкантов',
+  description: 'Кинематографичные видео и фото для музыкантов.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en" className={`${inter.variable} ${anton.variable} scroll-smooth`}>
+    <html lang="ru" className={`${roboto.variable} scroll-smooth`}>
       <body className="bg-black text-white font-sans antialiased selection:bg-orange-500 selection:text-black" suppressHydrationWarning>
         {children}
       </body>

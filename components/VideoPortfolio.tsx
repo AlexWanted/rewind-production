@@ -108,19 +108,19 @@ export default function VideoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Featured <span className="text-orange-500">Work</span>
+              Избранные <span className="text-orange-500">Работы</span>
             </h2>
             <p className="text-gray-400 max-w-xl font-light">
-              A curated selection of our latest music videos, live sessions, and visual projects for artists across the globe.
+              Тщательно отобранная коллекция наших последних музыкальных клипов, live-сессий и визуальных проектов для артистов со всего мира.
             </p>
           </div>
           <Link href="/works" className="px-6 py-3 border border-white/20 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm text-center">
-            View All Projects
+            Все Проекты
           </Link>
         </div>
 
         {loading ? (
-          <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+          <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {videos.map((video, index) => (

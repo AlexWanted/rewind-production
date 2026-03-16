@@ -57,12 +57,13 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
         className="w-full max-w-7xl bg-zinc-950 border border-white/10 rounded-sm overflow-hidden flex flex-col lg:flex-row shadow-2xl max-h-[90vh]"
       >
         {/* Секция с видеоплеером */}
-        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative">
+        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[30vh] lg:min-h-[80vh]">
           <video
             src={video.videoUrl}
             controls
             autoPlay
-            className="w-full h-full object-contain max-h-[70vh] lg:max-h-[90vh]"
+            playsInline
+            className="w-full h-auto max-h-[60vh] lg:max-h-[90vh] object-contain"
             controlsList="nodownload"
           />
         </div>
@@ -86,22 +87,30 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           </p>
 
           <div className="space-y-4 mt-auto border-t border-white/10 pt-6">
-            <div className="grid grid-cols-3 gap-4">
-              <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Director</span>
-              <span className="text-sm text-white font-medium col-span-2">{video.director}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">DoP</span>
-              <span className="text-sm text-white font-medium col-span-2">{video.cinematographer}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Editor</span>
-              <span className="text-sm text-white font-medium col-span-2">{video.editor}</span>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Producer</span>
-              <span className="text-sm text-white font-medium col-span-2">{video.producer}</span>
-            </div>
+            {video.director && (
+              <div className="grid grid-cols-3 gap-4">
+                <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Режиссер</span>
+                <span className="text-sm text-white font-medium col-span-2">{video.director}</span>
+              </div>
+            )}
+            {video.cinematographer && (
+              <div className="grid grid-cols-3 gap-4">
+                <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Оператор</span>
+                <span className="text-sm text-white font-medium col-span-2">{video.cinematographer}</span>
+              </div>
+            )}
+            {video.editor && (
+              <div className="grid grid-cols-3 gap-4">
+                <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Монтаж</span>
+                <span className="text-sm text-white font-medium col-span-2">{video.editor}</span>
+              </div>
+            )}
+            {video.producer && (
+              <div className="grid grid-cols-3 gap-4">
+                <span className="text-xs uppercase tracking-widest text-gray-500 col-span-1">Продюсер</span>
+                <span className="text-sm text-white font-medium col-span-2">{video.producer}</span>
+              </div>
+            )}
           </div>
         </div>
       </motion.div>

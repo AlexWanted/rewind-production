@@ -47,15 +47,15 @@ export default function PhotographyPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              All <span className="text-orange-500">Photography</span>
+              Вся <span className="text-orange-500">Фотография</span>
             </h1>
             <p className="text-gray-400 max-w-xl font-light">
-              Explore our complete archive of live performances, intimate studio sessions, and striking artist portraits.
+              Изучите наш полный архив живых выступлений, интимных студийных сессий и ярких портретов артистов.
             </p>
           </div>
 
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+            <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
               {photos.map((photo, index) => (

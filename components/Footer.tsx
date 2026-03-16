@@ -8,14 +8,14 @@ export default function Footer() {
           REWIND<span className="text-orange-500">.</span>
         </div>
         
-        <p className="text-xs uppercase tracking-widest text-gray-500 font-light">
-          &copy; {new Date().getFullYear()} Rewind Production. All rights reserved.
+        /*! <p className="text-xs uppercase tracking-widest text-gray-500 font-light">
+          &copy; {new Date().getFullYear()} Rewind Production. Все права защищены.
         </p>
 
-        <div className="flex gap-6 text-xs uppercase tracking-widest text-gray-500">
-          <a href="#" className="hover:text-orange-500 transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-orange-500 transition-colors">Terms of Service</a>
-        </div>
+         <div className="flex gap-6 text-xs uppercase tracking-widest text-gray-500">
+          <a href="#" className="hover:text-orange-500 transition-colors">Политика конфиденциальности</a>
+          <a href="#" className="hover:text-orange-500 transition-colors">Условия использования</a>
+        </div> */
       </div>
     </footer>
   );

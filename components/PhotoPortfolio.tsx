@@ -55,19 +55,19 @@ export default function PhotoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Still <span className="text-orange-500">Moments</span>
+              Застывшие <span className="text-orange-500">Моменты</span>
             </h2>
             <p className="text-gray-400 max-w-xl font-light">
-              Capturing the raw energy of live performances, intimate studio sessions, and striking artist portraits.
+              Запечатлеваем сырую энергию живых выступлений, интимные студийные сессии и яркие портреты артистов.
             </p>
           </div>
           <Link href="/photography" className="px-6 py-3 border border-white/20 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm text-center">
-            View All Photos
+            Все Фотографии
           </Link>
         </div>
 
         {loading ? (
-          <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+          <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
             {photos.map((photo, index) => (

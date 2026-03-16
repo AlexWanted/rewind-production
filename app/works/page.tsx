@@ -48,15 +48,15 @@ export default function WorksPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              All <span className="text-orange-500">Works</span>
+              Все <span className="text-orange-500">Работы</span>
             </h1>
             <p className="text-gray-400 max-w-xl font-light">
-              Explore our complete archive of music videos, live sessions, and visual projects.
+              Изучите наш полный архив музыкальных клипов, живых сессий и визуальных проектов.
             </p>
           </div>
 
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+            <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
@@ -107,10 +107,10 @@ export default function WorksPage() {
                 <>
                   <div className="mb-12">
                     <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
-                      Short <span className="text-orange-500">Snippets</span>
+                      Короткие <span className="text-orange-500">Сниппеты</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Quick glimpses into our creative process and short-form content.
+                      Быстрые взгляды на наш творческий процесс и короткие видео.
                     </p>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

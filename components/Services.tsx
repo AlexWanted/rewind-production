@@ -6,26 +6,26 @@ import { Video, Camera, Scissors, Mic2 } from 'lucide-react';
 const services = [
   {
     id: '01',
-    title: 'Music Videos',
-    description: 'Full-scale music video production from concept to final cut. We bring your sonic vision to life with cinematic storytelling.',
+    title: 'Музыкальные Клипы',
+    description: 'Полномасштабное производство музыкальных клипов от концепции до финального монтажа. Мы воплощаем ваше звуковое видение в жизнь с помощью кинематографичного сторителлинга.',
     icon: Video,
   },
   {
     id: '02',
-    title: 'Live Sessions',
-    description: 'High-quality multi-camera live performance recordings, capturing the raw energy of your band in studio or on stage.',
+    title: 'Live-Сессии',
+    description: 'Высококачественная многокамерная запись живых выступлений, передающая сырую энергию вашей группы в студии или на сцене.',
     icon: Mic2,
   },
   {
     id: '03',
-    title: 'Photography',
-    description: 'Press shots, album artwork photography, and behind-the-scenes documentary coverage of your creative process.',
+    title: 'Фотография',
+    description: 'Пресс-снимки, фотографии для обложек альбомов и документальное освещение вашего творческого процесса за кулисами.',
     icon: Camera,
   },
   {
     id: '04',
-    title: 'Post-Production',
-    description: 'Professional editing, color grading, and visual effects to give your footage that polished, industry-standard look.',
+    title: 'Постпродакшн',
+    description: 'Профессиональный монтаж, цветокоррекция и визуальные эффекты, чтобы придать вашим материалам отполированный вид по стандартам индустрии.',
     icon: Scissors,
   },
 ];
@@ -37,19 +37,19 @@ export default function Services() {
         <div className="flex flex-col md:flex-row justify-between items-start mb-24 gap-12">
           <div className="md:w-1/2">
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-6">
-              What We <span className="text-orange-500">Do</span>
+              Что Мы <span className="text-orange-500">Делаем</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed">
-              We specialize in creating visual content that amplifies the music. From high-end music videos to intimate live sessions, we handle every step of the production process.
+              Мы специализируемся на создании визуального контента, который усиливает музыку. От высококлассных музыкальных клипов до интимных live-сессий — мы берем на себя каждый этап производственного процесса.
             </p>
           </div>
-          <div className="md:w-1/3 flex justify-end">
+          /*! <div className="md:w-1/3 flex justify-end">
             <div className="w-24 h-24 rounded-full border border-orange-500/30 flex items-center justify-center animate-[spin_10s_linear_infinite]">
               <span className="text-[10px] uppercase tracking-[0.2em] text-orange-500 font-semibold text-center leading-tight">
-                Creative<br />Vision
+                Творческое<br />Видение
               </span>
             </div>
-          </div>
+          </div> */
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
