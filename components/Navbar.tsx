@@ -34,7 +34,7 @@ export default function Navbar() {
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-display uppercase tracking-wider text-white">
+        <Link href="/" className="text-2xl font-display uppercase tracking-wider text-white mb-10">
           REWIND<span className="text-orange-500">.</span>
         </Link>
 

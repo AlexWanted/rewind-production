@@ -66,18 +66,6 @@ export default function Contact() {
                   </a>
                 </div>
               </div>
-
-              /*! <div className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-orange-500 transition-colors">
-                  <MapPin className="text-orange-500" size={20} />
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Студия</p>
-                  <p className="text-lg font-light">
-                    1234 Sunset Blvd, Los Angeles, CA 90028
-                  </p>
-                </div>
-              </div> */
             </div>
 
             <div className="mt-16 flex gap-6">

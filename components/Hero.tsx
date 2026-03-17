@@ -22,23 +22,12 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center">
-        /*! <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm"
-        >
-          <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-          <span className="text-xs font-medium uppercase tracking-widest text-gray-300">
-            Открыта запись на 2026
-          </span>
-        </motion.div> */
 
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-6xl md:text-8xl lg:text-9xl font-display uppercase tracking-tighter leading-[0.85] mb-8"
+          className="text-4xl md:text-6xl lg:text-7xl font-display uppercase tracking-tight leading-[0.85] mb-8"
         >
           Визуал, Который <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
@@ -73,17 +62,6 @@ export default function Hero() {
           </button>
         </motion.div>
       </div>
-
-      { /* Scroll indicator */ }
-      /*! <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500">Вниз</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent" />
-      </motion.div> */
     </section>
   );
 }

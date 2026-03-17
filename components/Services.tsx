@@ -43,13 +43,6 @@ export default function Services() {
               Мы специализируемся на создании визуального контента, который усиливает музыку. От высококлассных музыкальных клипов до интимных live-сессий — мы берем на себя каждый этап производственного процесса.
             </p>
           </div>
-          /*! <div className="md:w-1/3 flex justify-end">
-            <div className="w-24 h-24 rounded-full border border-orange-500/30 flex items-center justify-center animate-[spin_10s_linear_infinite]">
-              <span className="text-[10px] uppercase tracking-[0.2em] text-orange-500 font-semibold text-center leading-tight">
-                Творческое<br />Видение
-              </span>
-            </div>
-          </div> */
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
