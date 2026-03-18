@@ -18,7 +18,7 @@ export default function Hero() {
         >
           <source src="/uploads/misc/1773866875776-29482824-site-banner.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black" />
       </div>
 
       {/* Content */}
