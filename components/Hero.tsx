@@ -16,8 +16,7 @@ export default function Hero() {
           playsInline
           className="object-cover w-full h-full opacity-40"
         >
-          {/* Замените src на ссылку на ваше загруженное видео */}
-          <source src="/uploads/hero-video.mp4" type="video/mp4" />
+          <source src="/uploads/misc/1773866875776-29482824-site-banner.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
       </div>
@@ -52,16 +51,15 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
           className="flex flex-col sm:flex-row items-center gap-6"
         >
-          <a
-            href="#work"
-            className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm"
-          >
+          <a href="#work"
+            className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm">
             Наши Работы
           </a>
-          <button className="group flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
+		  
+          {/* <button className="group flex items-center gap-3 text-gray-300 hover:text-white transition-colors">
             <PlayCircle size={48} strokeWidth={1} className="group-hover:scale-110 transition-transform duration-300 text-orange-500" />
             <span className="text-sm font-medium uppercase tracking-widest">Шоурил</span>
-          </button>
+          </button> */}
         </motion.div>
       </div>
     </section>
