@@ -80,7 +80,7 @@ export default function VideoPortfolio() {
         const snapshot = await getDocs(q);
         if (!snapshot.empty) {
           let fetchedVideos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
-          fetchedVideos = fetchedVideos.filter(v => v.category !== 'Snippet');
+          fetchedVideos = fetchedVideos.filter(v => v.category !== 'Snippet' && v.category !== 'Live');
           fetchedVideos.sort((a, b) => {
             if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
             if (a.order !== undefined) return -1;

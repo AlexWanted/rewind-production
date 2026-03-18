@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "/_not-found",
+  "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/api/files/route": "/api/files",
   "/api/upload/route": "/api/upload",
-  "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/admin/page": "/admin",
   "/page": "/",
   "/photography/page": "/photography",

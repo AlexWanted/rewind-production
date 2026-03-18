@@ -60,7 +60,7 @@ export default function WorksPage() {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-                {videos.filter(v => v.category !== 'Snippet').map((video, index) => (
+                {videos.filter(v => v.category !== 'Snippet' && v.category !== 'Live').map((video, index) => (
                   <motion.div
                     key={video.id}
                     initial={{ opacity: 0, y: 30 }}
@@ -102,6 +102,56 @@ export default function WorksPage() {
                   </motion.div>
                 ))}
               </div>
+
+              {videos.some(v => v.category === 'Live') && (
+                <>
+                  <div className="mb-12">
+                    <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
+                      Концертные <span className="text-orange-500">Лайвы</span>
+                    </h2>
+                    <p className="text-gray-400 max-w-xl font-light">
+                      Живые выступления и концертные записи.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+                    {videos.filter(v => v.category === 'Live').map((video, index) => (
+                      <motion.div
+                        key={video.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-50px' }}
+                        transition={{ duration: 0.6, delay: index * 0.1 }}
+                        onClick={() => setSelectedVideo(video)}
+                        className="group relative aspect-video overflow-hidden bg-zinc-900 cursor-pointer rounded-sm"
+                      >
+                        <Image
+                          src={video.image}
+                          alt={video.title}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                        
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100">
+                          <div className="w-16 h-16 rounded-full bg-orange-500/90 flex items-center justify-center backdrop-blur-sm">
+                            <Play className="text-white ml-1" size={24} />
+                          </div>
+                        </div>
+
+                        <div className="absolute bottom-0 left-0 p-6 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                          <h3 className="text-2xl font-display uppercase tracking-wider mb-1">
+                            {video.title}
+                          </h3>
+                          <p className="text-gray-300 text-sm font-light">
+                            {video.artist}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {videos.some(v => v.category === 'Snippet') && (
                 <>

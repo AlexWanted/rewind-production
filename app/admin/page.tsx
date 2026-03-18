@@ -12,10 +12,11 @@ import { Reorder } from 'motion/react';
 export default function AdminPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'videos' | 'snippets' | 'photos' | 'files'>('videos');
+  const [activeTab, setActiveTab] = useState<'videos' | 'snippets' | 'lives' | 'photos' | 'files'>('videos');
   
   const [videos, setVideos] = useState<VideoData[]>([]);
   const [snippets, setSnippets] = useState<VideoData[]>([]);
+  const [lives, setLives] = useState<VideoData[]>([]);
   const [photos, setPhotos] = useState<PhotoData[]>([]);
   const [files, setFiles] = useState<any[]>([]);
   
@@ -56,8 +57,9 @@ export default function AdminPage() {
         return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
       });
 
-      setVideos(allVideos.filter(v => v.category !== 'Snippet'));
+      setVideos(allVideos.filter(v => v.category !== 'Snippet' && v.category !== 'Live'));
       setSnippets(allVideos.filter(v => v.category === 'Snippet'));
+      setLives(allVideos.filter(v => v.category === 'Live'));
 
       const allPhotos = photosSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
       allPhotos.sort((a, b) => {
@@ -118,7 +120,7 @@ export default function AdminPage() {
       const data = {
         title: editingVideo.title || '',
         artist: editingVideo.artist || '',
-        category: activeTab === 'snippets' ? 'Snippet' : (editingVideo.category || ''),
+        category: activeTab === 'snippets' ? 'Snippet' : activeTab === 'lives' ? 'Live' : (editingVideo.category || ''),
         image: imageUrl,
         videoUrl: videoUrl,
         year: Number(editingVideo.year) || new Date().getFullYear(),
@@ -290,7 +292,7 @@ export default function AdminPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-light capitalize">
-          {activeTab === 'videos' ? 'Видео' : activeTab === 'snippets' ? 'Сниппеты' : 'Фотосессии'}
+          {activeTab === 'videos' ? 'Видео' : activeTab === 'snippets' ? 'Сниппеты' : activeTab === 'lives' ? 'Лайвы' : 'Фотосессии'}
         </h2>
         <div className="flex gap-2">
           <button 
@@ -334,6 +336,24 @@ export default function AdminPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-light capitalize">Загруженные Файлы</h2>
+        <label className="flex items-center gap-2 px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors rounded-sm text-sm font-semibold cursor-pointer">
+          <UploadCloud size={16} /> Загрузить файл
+          <input 
+            type="file" 
+            className="hidden" 
+            onChange={async (e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                try {
+                  await uploadFile(e.target.files[0], 'misc');
+                  fetchData();
+                } catch (error) {
+                  console.error("Error uploading file:", error);
+                  alert("Failed to upload file.");
+                }
+              }
+            }} 
+          />
+        </label>
       </div>
       <div className="grid gap-4">
         {files.map((file, idx) => (
@@ -382,12 +402,14 @@ export default function AdminPage() {
         <div className="flex gap-4 mb-8 border-b border-zinc-800 pb-4 overflow-x-auto">
           <button onClick={() => setActiveTab('videos')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'videos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Видео</button>
           <button onClick={() => setActiveTab('snippets')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'snippets' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Сниппеты</button>
+          <button onClick={() => setActiveTab('lives')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'lives' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Лайвы</button>
           <button onClick={() => setActiveTab('photos')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'photos' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Фотосессии</button>
           <button onClick={() => setActiveTab('files')} className={`px-6 py-2 uppercase tracking-widest text-sm font-semibold transition-colors whitespace-nowrap ${activeTab === 'files' ? 'text-orange-500 border-b-2 border-orange-500' : 'text-gray-500 hover:text-white'}`}>Файлы</button>
         </div>
 
         {activeTab === 'videos' && renderList(videos, setVideos, 'videos', openVideoEditor)}
         {activeTab === 'snippets' && renderList(snippets, setSnippets, 'videos', openVideoEditor)}
+        {activeTab === 'lives' && renderList(lives, setLives, 'videos', openVideoEditor)}
         {activeTab === 'photos' && renderList(photos, setPhotos, 'photos', openPhotoEditor)}
         {activeTab === 'files' && renderFiles()}
 
@@ -402,7 +424,7 @@ export default function AdminPage() {
               <div className="grid grid-cols-2 gap-4">
                 <input placeholder="Название" value={editingVideo.title || ''} onChange={e => setEditingVideo({...editingVideo, title: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm col-span-2" />
                 <input placeholder="Артист" value={editingVideo.artist || ''} onChange={e => setEditingVideo({...editingVideo, artist: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
-                {activeTab !== 'snippets' && (
+                {activeTab !== 'snippets' && activeTab !== 'lives' && (
                   <input placeholder="Категория" value={editingVideo.category || ''} onChange={e => setEditingVideo({...editingVideo, category: e.target.value})} className="bg-zinc-950 border border-zinc-800 p-3 rounded-sm" />
                 )}
                 

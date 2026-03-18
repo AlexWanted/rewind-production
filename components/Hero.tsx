@@ -9,14 +9,16 @@ export default function Hero() {
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video/Image */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="https://picsum.photos/seed/concert/1920/1080?blur=2"
-          alt="Showreel Background"
-          fill
-          className="object-cover opacity-40"
-          priority
-          referrerPolicy="no-referrer"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="object-cover w-full h-full opacity-40"
+        >
+          {/* Замените src на ссылку на ваше загруженное видео */}
+          <source src="/uploads/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
       </div>
 
