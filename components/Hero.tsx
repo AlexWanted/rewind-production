@@ -22,13 +22,15 @@ export default function Hero() {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video/Image */}
-      <div className="absolute inset-0 z-0">
+      <div data-video-controls="hidden" className="absolute inset-0 z-0">
         <video
           ref={videoRef}
           autoPlay
           loop
           muted={true}
           playsInline={true}
+		  data-video-initialized="true"
+		  preload="auto"
           className="object-cover w-full h-full opacity-50"
         >
           <source src="/uploads/misc/1773867797446-85208419-site-banner.mp4" type="video/mp4" />
