@@ -3,22 +3,37 @@
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { PlayCircle } from 'lucide-react';
+import { useRef, useEffect } from 'react';
 
 export default function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      // Force play on mount to fix mobile autoplay issues
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(error => {
+        console.error("Video autoplay failed:", error);
+      });
+    }
+  }, []);
+
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video/Image */}
       <div className="absolute inset-0 z-0">
         <video
+          ref={videoRef}
           autoPlay
           loop
-          muted
-          playsInline
-          className="object-cover w-full h-full opacity-40"
+          muted={true}
+          playsInline={true}
+          className="object-cover w-full h-full opacity-50"
         >
-          <source src="/uploads/misc/1773866875776-29482824-site-banner.mp4" type="video/mp4" />
+          <source src="/uploads/misc/1773867797446-85208419-site-banner.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black" />
       </div>
 
       {/* Content */}

@@ -3,8 +3,8 @@
   "/api/files/route": "/api/files",
   "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/api/upload/route": "/api/upload",
-  "/admin/page": "/admin",
   "/page": "/",
+  "/admin/page": "/admin",
   "/photography/page": "/photography",
   "/works/page": "/works"
 }
