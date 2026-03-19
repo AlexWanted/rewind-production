@@ -48,10 +48,10 @@ export default function WorksPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Все <span className="text-orange-500">Работы</span>
+              Наши <span className="text-orange-500">Клипы</span>
             </h1>
-            <p className="text-gray-400 max-w-xl font-light">
-              Изучите наш полный архив музыкальных клипов, живых сессий и визуальных проектов.
+             <p className="text-gray-400 max-w-xl font-light">
+              Полноценные музыкальные видео.
             </p>
           </div>
 
@@ -68,8 +68,7 @@ export default function WorksPage() {
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     onClick={() => setSelectedVideo(video)}
-                    className="group relative aspect-video overflow-hidden bg-zinc-900 cursor-pointer rounded-sm"
-                  >
+                    className="group relative aspect-video overflow-hidden bg-zinc-900 cursor-pointer rounded-sm">
                     <Image
                       src={video.image}
                       alt={video.title}
@@ -110,7 +109,7 @@ export default function WorksPage() {
                       Концертные <span className="text-orange-500">Лайвы</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Живые выступления и концертные записи.
+                      Студийные записи и концертные выступления.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
@@ -160,7 +159,7 @@ export default function WorksPage() {
                       Короткие <span className="text-orange-500">Сниппеты</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Быстрые взгляды на наш творческий процесс и короткие видео.
+                      Короткие видео, демонстрирующие часть трека.
                     </p>
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -172,15 +171,13 @@ export default function WorksPage() {
                         viewport={{ once: true, margin: '-50px' }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
                         onClick={() => setSelectedVideo(video)}
-                        className="group relative aspect-[9/16] overflow-hidden bg-zinc-900 cursor-pointer rounded-sm"
-                      >
+                        className="group relative aspect-[9/16] overflow-hidden bg-zinc-900 cursor-pointer rounded-sm">
                         <Image
                           src={video.image}
                           alt={video.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                          referrerPolicy="no-referrer"
-                        />
+                          referrerPolicy="no-referrer" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
                         
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 scale-90 group-hover:scale-100">

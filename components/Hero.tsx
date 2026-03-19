@@ -10,7 +10,6 @@ export default function Hero() {
 
   useEffect(() => {
     if (videoRef.current) {
-      // Force play on mount to fix mobile autoplay issues
       videoRef.current.defaultMuted = true;
       videoRef.current.muted = true;
       videoRef.current.play().catch(error => {
@@ -29,10 +28,9 @@ export default function Hero() {
           loop
           muted={true}
           playsInline={true}
-		  data-video-initialized="true"
-		  preload="auto"
-          className="object-cover w-full h-full opacity-50"
-        >
+		      data-video-initialized="true"
+		      preload="auto"
+          className="object-cover w-full h-full opacity-50">
           <source src="/uploads/misc/1773867797446-85208419-site-banner.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black" />
@@ -45,10 +43,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-4xl md:text-6xl lg:text-7xl font-display uppercase tracking-tight leading-[0.85] mb-8"
-        >
+          className="text-4xl md:text-6xl lg:text-7xl font-display uppercase tracking-tight leading-[0.95] mb-8">
           Визуал, Который <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 mb-12">
             Говорит Громче
           </span>
         </motion.h1>
@@ -57,17 +54,15 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-          className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 font-light"
-        >
-          Мы создаем кинематографичные музыкальные клипы, live-сессии и визуальную айдентику для артистов, которые хотят оставить след.
+          className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 font-light">
+          Мы создаем кинематографичный музыкальный визуал для артистов, которые хотят оставить след.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
-          className="flex flex-col sm:flex-row items-center gap-6"
-        >
+          className="flex flex-col sm:flex-row items-center gap-6">
           <a href="#work"
             className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm">
             Наши Работы

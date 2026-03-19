@@ -17,7 +17,7 @@ export default function About() {
           >
             <div className="absolute inset-0 bg-orange-500/20 translate-x-4 translate-y-4 rounded-sm" />
             <Image
-              src="https://picsum.photos/seed/director/800/1000"
+              src="/uploads/misc/1773881738735-441575069-_______12-03_5.jpg"
               alt="Director on set"
               fill
               className="object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700"
@@ -42,24 +42,24 @@ export default function About() {
             
             <div className="space-y-6 text-gray-400 font-light leading-relaxed text-lg">
               <p>
-                Rewind Production родилась из общей одержимости музыкой и кино. Мы — коллектив режиссеров, операторов и монтажеров, преданных делу перевода звука в поразительные визуальные образы.
+                rewind production с самого своего основания специализируется на создании музыкального визуала.
               </p>
               <p>
-                Мы верим, что у каждого артиста есть своя уникальная частота. Наша работа — настроиться на эту частоту и построить вокруг нее визуальный мир. Будь то суровое андеграундное хип-хоп видео или масштабная кинематографичная работа для инди-рок группы, мы подходим к каждому проекту с одинаковой страстью и точностью.
+                Для нас важно создавать контент, который будет нравится в первую очередь артисту и его слушателям. Мы стараемся адаптироваться под ваш визуальный стиль, идеи и концепцию вашей музыки.
               </p>
               <p>
-                За последние пять лет мы сотрудничали как с восходящими талантами, так и с признанными иконами, помогая им рассказывать свои истории через объектив камеры.
+                За последние несколько лет мы провели несколько сотен съёмок, как для начинающих артистов, так и в сотруднечестве с выпускающими лейблами.
               </p>
             </div>
 
             <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-12">
               <div>
-                <p className="text-4xl font-display text-white mb-2">150+</p>
+                <p className="text-4xl font-display text-white mb-2">20+</p>
                 <p className="text-xs uppercase tracking-widest text-orange-500">Музыкальных Клипов</p>
               </div>
               <div>
-                <p className="text-4xl font-display text-white mb-2">50M+</p>
-                <p className="text-xs uppercase tracking-widest text-orange-500">Просмотров на YouTube</p>
+                <p className="text-4xl font-display text-white mb-2">1000+</p>
+                <p className="text-xs uppercase tracking-widest text-orange-500">Готовых сниппетов</p>
               </div>
             </div>
           </motion.div>

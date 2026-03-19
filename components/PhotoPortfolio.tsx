@@ -8,13 +8,7 @@ import PhotoModal, { PhotoData } from './PhotoModal';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
-const fallbackPhotos: PhotoData[] = [
-  { id: '1', images: ['https://picsum.photos/seed/band1/600/800'], alt: 'Band Portrait', photographer: 'Alex Mercer', location: 'Studio A', date: 'Oct 2025', camera: 'Leica Q2' },
-  { id: '2', images: ['https://picsum.photos/seed/live1/800/600'], alt: 'Live Show Energy', photographer: 'Jordan Lee', location: 'The Roxy', date: 'Sep 2025', camera: 'Sony A7S III' },
-  { id: '3', images: ['https://picsum.photos/seed/studio1/600/600'], alt: 'Studio Session', photographer: 'Elena Rostova', location: 'Soundscape Studios', date: 'Aug 2025', camera: 'Canon EOS R5' },
-  { id: '4', images: ['https://picsum.photos/seed/backstage1/600/600'], alt: 'Backstage Moments', photographer: 'Alex Mercer', location: 'Hollywood Bowl', date: 'Jul 2025', camera: 'Fujifilm X-T4' },
-  { id: '5', images: ['https://picsum.photos/seed/live2/800/600'], alt: 'Crowd Surfing', photographer: 'Jordan Lee', location: 'Coachella', date: 'Apr 2025', camera: 'Sony A7S III' },
-];
+const fallbackPhotos: PhotoData[] = [];
 
 export default function PhotoPortfolio() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoData | null>(null);
@@ -55,14 +49,14 @@ export default function PhotoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Застывшие <span className="text-orange-500">Моменты</span>
+              Наши <span className="text-orange-500">Фотосеты</span>
             </h2>
-            <p className="text-gray-400 max-w-xl font-light">
+            {/* <p className="text-gray-400 max-w-xl font-light">
               Запечатлеваем сырую энергию живых выступлений, интимные студийные сессии и яркие портреты артистов.
-            </p>
+            </p> */}
           </div>
           <Link href="/photography" className="px-6 py-3 border border-white/20 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm text-center">
-            Все Фотографии
+            Больше Фотографий
           </Link>
         </div>
 
@@ -78,8 +72,7 @@ export default function PhotoPortfolio() {
                 viewport={{ once: true, margin: '-50px' }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => setSelectedPhoto(photo)}
-                className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
-              >
+                className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}>
                 <Image
                   src={photo.images?.[0] || photo.src || ''}
                   alt={photo.alt}

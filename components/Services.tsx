@@ -1,32 +1,36 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Video, Camera, Scissors, Mic2 } from 'lucide-react';
+import { Video, Camera, Mic2, Clapperboard } from 'lucide-react';
 
 const services = [
   {
     id: '01',
     title: 'Музыкальные Клипы',
-    description: 'Полномасштабное производство музыкальных клипов от концепции до финального монтажа. Мы воплощаем ваше звуковое видение в жизнь с помощью кинематографичного сторителлинга.',
+    description: 'Производство музыкальных клипов от идеи до финального результата.',
     icon: Video,
+    price: '50'
   },
   {
     id: '02',
-    title: 'Live-Сессии',
-    description: 'Высококачественная многокамерная запись живых выступлений, передающая сырую энергию вашей группы в студии или на сцене.',
-    icon: Mic2,
+    title: 'Сниппеты',
+    description: 'Динамичные короткие видео для продвижения ваших треков.',
+    icon: Clapperboard,
+    price: '15'
   },
   {
     id: '03',
-    title: 'Фотография',
-    description: 'Пресс-снимки, фотографии для обложек альбомов и документальное освещение вашего творческого процесса за кулисами.',
+    title: 'Фотосессии',
+    description: 'Фотографии для соцсетей, карточки артиста или обложек релизов.',
     icon: Camera,
+    price: '10'
   },
   {
     id: '04',
-    title: 'Постпродакшн',
-    description: 'Профессиональный монтаж, цветокоррекция и визуальные эффекты, чтобы придать вашим материалам отполированный вид по стандартам индустрии.',
-    icon: Scissors,
+    title: 'Лайв видео',
+    description: 'Многокамерная запись ваших живых выступлений, как концертная, так и студийная.',
+    icon: Mic2,
+    price: '60'
   },
 ];
 
@@ -40,7 +44,7 @@ export default function Services() {
               Что Мы <span className="text-orange-500">Делаем</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed">
-              Мы специализируемся на создании визуального контента, который усиливает музыку. От высококлассных музыкальных клипов до интимных live-сессий — мы берем на себя каждый этап производственного процесса.
+              Мы специализируемся на создании визуального контента, который усиливает музыку. Подстроимся под вашу идею и визуальный стиль.
             </p>
           </div>
         </div>
@@ -53,8 +57,7 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative pl-8 md:pl-16 border-l border-white/10 hover:border-orange-500 transition-colors duration-500"
-            >
+              className="group relative pl-8 md:pl-16 border-l border-white/10 hover:border-orange-500 transition-colors duration-500">
               <div className="absolute -left-[1px] top-0 w-[2px] h-0 bg-orange-500 group-hover:h-full transition-all duration-500 ease-out" />
               
               <div className="flex items-center gap-6 mb-6">
@@ -69,6 +72,9 @@ export default function Services() {
               </h3>
               <p className="text-gray-400 font-light leading-relaxed">
                 {service.description}
+              </p>
+              <p>
+              От <span className="text-orange-500 mb-4">{service.price}</span> тыс. рублей
               </p>
             </motion.div>
           ))}

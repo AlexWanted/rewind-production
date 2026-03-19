@@ -48,6 +48,12 @@
       "namedRegex": "^/admin(?:/)?$"
     },
     {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
       "page": "/photography",
       "regex": "^/photography(?:/)?$",
       "routeKeys": {},

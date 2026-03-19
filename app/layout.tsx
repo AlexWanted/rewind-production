@@ -1,5 +1,5 @@
 import type {Metadata} from 'next';
-import { Roboto_Condensed } from 'next/font/google';
+import { Roboto_Condensed, Anton } from 'next/font/google';
 import './globals.css';
 
 const roboto = Roboto_Condensed ({
@@ -8,11 +8,11 @@ const roboto = Roboto_Condensed ({
   display: 'swap',
 });
 
-/* const anton = Anton({
+const anton = Anton({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-display',
-}); */
+});
 
 export const metadata: Metadata = {
   title: 'rewind production | видеопродакшн для музыкантов',

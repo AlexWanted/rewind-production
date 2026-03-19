@@ -47,11 +47,11 @@ export default function PhotographyPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Вся <span className="text-orange-500">Фотография</span>
+              Наши <span className="text-orange-500">Фотосеты</span>
             </h1>
-            <p className="text-gray-400 max-w-xl font-light">
+            {/* <p className="text-gray-400 max-w-xl font-light">
               Изучите наш полный архив живых выступлений, интимных студийных сессий и ярких портретов артистов.
-            </p>
+            </p> */}
           </div>
 
           {loading ? (
@@ -66,15 +66,13 @@ export default function PhotographyPage() {
                   viewport={{ once: true, margin: '-50px' }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   onClick={() => setSelectedPhoto(photo)}
-                  className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}
-                >
+                  className={`relative group overflow-hidden bg-zinc-900 rounded-sm cursor-pointer`}>
                   <Image
                     src={photo.images?.[0] || photo.src || ''}
                     alt={photo.alt}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
-                    referrerPolicy="no-referrer"
-                  />
+                    referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.div>
               ))}

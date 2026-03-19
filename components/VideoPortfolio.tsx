@@ -9,64 +9,7 @@ import VideoModal, { VideoData } from './VideoModal';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
-const fallbackVideos: VideoData[] = [
-  {
-    id: '1',
-    title: 'Neon Dreams',
-    artist: 'The Midnight Echoes',
-    category: 'Music Video',
-    image: 'https://picsum.photos/seed/neon/800/600',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
-    year: 2025,
-    director: 'Alex Mercer',
-    cinematographer: 'Jordan Lee',
-    editor: 'Sam Rivera',
-    producer: 'Elena Rostova',
-    description: 'A cyberpunk-inspired visual journey through the neon-lit streets of a futuristic metropolis. Shot on location in Tokyo.'
-  },
-  {
-    id: '2',
-    title: 'Acoustic Session',
-    artist: 'Sarah Jenkins',
-    category: 'Live Performance',
-    image: 'https://picsum.photos/seed/acoustic/800/600',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-    year: 2024,
-    director: 'Marcus Chen',
-    cinematographer: 'David Smith',
-    editor: 'Marcus Chen',
-    producer: 'Sarah Jenkins',
-    description: 'An intimate, one-take acoustic performance recorded live at Soundscape Studios.'
-  },
-  {
-    id: '3',
-    title: 'Rhythm & Flow',
-    artist: 'DJ Pulse',
-    category: 'Tour Visuals',
-    image: 'https://picsum.photos/seed/dj/800/600',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-    year: 2025,
-    director: 'Elena Rostova',
-    cinematographer: 'Michael Chang',
-    editor: 'Chris Vance',
-    producer: 'Pulse Records',
-    description: "High-energy, abstract tour visuals created for DJ Pulse's 2025 World Tour."
-  },
-  {
-    id: '4',
-    title: 'Urban Symphony',
-    artist: 'City Lights',
-    category: 'Music Video',
-    image: 'https://picsum.photos/seed/city/800/600',
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-    year: 2023,
-    director: 'Sam Rivera',
-    cinematographer: 'Jordan Lee',
-    editor: 'Alex Mercer',
-    producer: 'Urban Sound',
-    description: 'A gritty, fast-paced exploration of city life, synchronized perfectly to the driving beat of City Lights.'
-  },
-];
+const fallbackVideos: VideoData[] = [];
 
 export default function VideoPortfolio() {
   const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
@@ -108,14 +51,14 @@ export default function VideoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Избранные <span className="text-orange-500">Работы</span>
+              Наши <span className="text-orange-500">Работы</span>
             </h2>
-            <p className="text-gray-400 max-w-xl font-light">
+            {/* <p className="text-gray-400 max-w-xl font-light">
               Тщательно отобранная коллекция наших последних музыкальных клипов, live-сессий и визуальных проектов для артистов со всего мира.
-            </p>
+            </p> */}
           </div>
           <Link href="/works" className="px-6 py-3 border border-white/20 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm text-center">
-            Все Проекты
+            Больше Видео
           </Link>
         </div>
 
@@ -131,8 +74,7 @@ export default function VideoPortfolio() {
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 onClick={() => setSelectedVideo(video)}
-                className="group relative aspect-video overflow-hidden bg-zinc-900 cursor-pointer rounded-sm"
-              >
+                className="group relative aspect-video overflow-hidden bg-zinc-900 cursor-pointer rounded-sm">
                 <Image
                   src={video.image}
                   alt={video.title}

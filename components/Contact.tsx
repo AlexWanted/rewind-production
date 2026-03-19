@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { Mail, Phone, MapPin, Instagram, Youtube, Twitter } from 'lucide-react';
+import { Mail, Phone, Instagram, Youtube, Send } from 'lucide-react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -33,8 +33,7 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
-            className="lg:w-1/2"
-          >
+            className="lg:w-1/2">
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-6">
               Давайте <span className="text-orange-500">Творить</span>
             </h2>
@@ -66,6 +65,18 @@ export default function Contact() {
                   </a>
                 </div>
               </div>
+
+              <div className="flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-orange-500 transition-colors">
+                  <Send className="text-orange-500" size={20} />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Телефон</p>
+                  <a href="t.me/rewindproduction" className="text-lg font-light hover:text-orange-500 transition-colors">
+                    @rewindproduction
+                  </a>
+                </div>
+              </div>
             </div>
 
             <div className="mt-16 flex gap-6">
@@ -74,6 +85,9 @@ export default function Contact() {
               </a>
               <a href="youtube.com/c/RewindTheTape" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
                 <Youtube size={18} />
+              </a>
+              <a href="t.me/potseluev_ph" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
+                <Send size={18} />
               </a>
             </div>
           </motion.div>
@@ -131,10 +145,9 @@ export default function Contact() {
                   id="project"
                   value={formData.project}
                   onChange={handleChange}
-                  className="w-full bg-black border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors font-light appearance-none"
-                >
+                  className="w-full bg-black border border-white/10 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-orange-500 transition-colors font-light appearance-none">
                   <option value="Сниппеты">Сниппеты</option>
-                  <option value="Фотография">Фотография</option>
+                  <option value="Фотосессия">Фотосессия</option>
                   <option value="Концертная съёмка">Концертная съёмка</option>
                   <option value="Клип, муд видео">Клип, муд видео</option>
                   <option value="Студийный лайв">Студийный лайв</option>
@@ -157,8 +170,7 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="w-full bg-white text-black font-semibold uppercase tracking-widest py-4 hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm"
-              >
+                className="w-full bg-white text-black font-semibold uppercase tracking-widest py-4 hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm">
                 Отправить сообщение
               </button>
             </form>
