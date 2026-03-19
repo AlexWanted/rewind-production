@@ -43,10 +43,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-4xl md:text-6xl lg:text-7xl font-display uppercase tracking-tight leading-[0.95] mb-8">
-          Визуал, Который <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 mb-12">
-            Говорит Громче
+          className="text-5xl md:text-7xl lg:text-7xl font-display font-semibold uppercase tracking-wide leading-tight mb-4">
+          Визуал, Который <br/>
+          Говорит <span className="text-orange-500 bg-clip-text mb-12 shadow-orange-500/50">Громче
           </span>
         </motion.h1>
 
@@ -64,7 +63,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
           className="flex flex-col sm:flex-row items-center gap-6">
           <a href="#work"
-            className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white transition-all duration-300 rounded-sm">
+            className="px-8 py-4 bg-white text-black font-semibold uppercase tracking-widest text-sm hover:bg-orange-500 hover:text-white hover:shadow-orange-500/50 transition-all duration-300 rounded-sm">
             Наши Работы
           </a>
 		  
