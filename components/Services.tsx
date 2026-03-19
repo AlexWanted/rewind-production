@@ -58,7 +58,7 @@ export default function Services() {
               viewport={{ once: true, margin: '-100px' }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative pl-8 md:pl-16 border-l border-white/10 hover:border-orange-500 transition-colors duration-500">
-              <div className="absolute -left-[1px] top-0 w-[2px] h-0 bg-orange-500 group-hover:h-full transition-all duration-500 ease-out" />
+              <div className="absolute -left-px top-0 w-[2px] h-0 bg-orange-500 group-hover:h-full transition-all duration-500 ease-out" />
               
               <div className="flex items-center gap-6 mb-6">
                 <span className="text-4xl font-display text-white/20 group-hover:text-orange-500/50 transition-colors duration-300">

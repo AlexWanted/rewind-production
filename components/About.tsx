@@ -13,7 +13,7 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8 }}
-            className="lg:w-1/2 relative aspect-[4/5] w-full max-w-md mx-auto"
+            className="lg:w-1/2 relative aspect-4/5 w-full max-w-md mx-auto"
           >
             <div className="absolute inset-0 bg-orange-500/20 translate-x-4 translate-y-4 rounded-sm" />
             <Image
@@ -55,11 +55,11 @@ export default function About() {
             <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-12">
               <div>
                 <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">20+</p>
-                <p className="text-2xl uppercase tracking-widest font-bold text-white">Музыкальных Клипов</p>
+                <p className="text-2xl uppercase tracking-widest font-semibold text-white">Музыкальных Клипов</p>
               </div>
               <div>
                 <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">1000+</p>
-                <p className="text-2xl uppercase tracking-widest font-bold text-white">Готовых сниппетов</p>
+                <p className="text-2xl uppercase tracking-widest font-semibold text-white">Готовых сниппетов</p>
               </div>
             </div>
           </motion.div>

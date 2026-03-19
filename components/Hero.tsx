@@ -33,7 +33,7 @@ export default function Hero() {
           className="object-cover w-full h-full opacity-50">
           <source src="/uploads/misc/1773867797446-85208419-site-banner.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/15 to-black" />
       </div>
 
       {/* Content */}
@@ -43,7 +43,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-5xl md:text-7xl lg:text-7xl font-display font-semibold uppercase tracking-wider leading-tight leading-[0.85] mb-4">
+          className="text-5xl md:text-7xl lg:text-7xl font-display font-semibold uppercase tracking-wide leading-[0.55] mb-4">
           Визуал, Который <br/>
           Говорит <span className="text-orange-500 bg-clip-text mb-12 text-shadow-orange">Громче
           </span>
