@@ -71,7 +71,7 @@ export default function Contact() {
                   <Send className="text-orange-500" size={20} />
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Телефон</p>
+                  <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Telegram</p>
                   <a href="t.me/rewindproduction" className="text-lg font-light hover:text-orange-500 transition-colors">
                     @rewindproduction
                   </a>
