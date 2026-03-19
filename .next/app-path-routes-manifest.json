@@ -1,12 +1,12 @@
 {
+  "/_not-found/page": "/_not-found",
   "/apple-icon.png/route": "/apple-icon.png",
   "/favicon.ico/route": "/favicon.ico",
-  "/_not-found/page": "/_not-found",
   "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/api/files/route": "/api/files",
   "/api/upload/route": "/api/upload",
-  "/admin/page": "/admin",
   "/page": "/",
-  "/works/page": "/works",
-  "/photography/page": "/photography"
+  "/admin/page": "/admin",
+  "/photography/page": "/photography",
+  "/works/page": "/works"
 }

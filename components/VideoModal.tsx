@@ -40,12 +40,10 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl"
-      onClick={onClose}
-    >
+      onClick={onClose}>
       <button
         onClick={onClose}
-        className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md"
-      >
+        className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md">
         <X size={28} />
       </button>
 
@@ -54,18 +52,16 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-7xl bg-zinc-950 border border-white/10 rounded-sm overflow-hidden flex flex-col lg:flex-row shadow-2xl max-h-[90vh]"
-      >
+        className="w-full max-w-7xl bg-zinc-950 border border-white/10 rounded-sm overflow-hidden flex flex-col lg:flex-row shadow-2xl max-h-[90vh]">
         {/* Секция с видеоплеером */}
-        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[30vh] lg:min-h-[80vh]">
+        <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative">
           <video
             src={video.videoUrl}
             controls
             autoPlay
             playsInline
             className="w-full h-auto max-h-[60vh] lg:max-h-[90vh] object-contain"
-            controlsList="nodownload"
-          />
+            controlsList="nodownload"/>
         </div>
 
         {/* Секция с информацией о видео */}

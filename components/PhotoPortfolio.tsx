@@ -78,8 +78,7 @@ export default function PhotoPortfolio() {
                   alt={photo.alt}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
-                  referrerPolicy="no-referrer"
-                />
+                  referrerPolicy="no-referrer"/>
                 {/* Легкое затемнение при наведении, без кнопки View */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.div>

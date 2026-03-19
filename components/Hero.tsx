@@ -55,7 +55,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
           className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 font-light">
-          Мы создаем кинематографичный визуальный контент для артистов, которые хотят запомниться
+          Мы создаем кинематографичный визуальный контент для артистов, который запоминается
         </motion.p>
 
         <motion.div

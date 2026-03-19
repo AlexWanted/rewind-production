@@ -72,7 +72,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Telegram</p>
-                  <a href="t.me/rewindproduction" className="text-lg font-light hover:text-orange-500 transition-colors">
+                  <a href="https://t.me/rewindproduction/" className="text-lg font-light hover:text-orange-500 transition-colors">
                     @rewindproduction
                   </a>
                 </div>
@@ -80,13 +80,13 @@ export default function Contact() {
             </div>
 
             <div className="mt-16 flex gap-6">
-              <a href="instagram.com/_rewindthetape_/" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
+              <a href="https://instagram.com/_rewindthetape_/" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
                 <Instagram size={18} />
               </a>
-              <a href="youtube.com/c/RewindTheTape" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
+              <a href="https://youtube.com/c/RewindTheTape" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
                 <Youtube size={18} />
               </a>
-              <a href="t.me/potseluev_ph" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
+              <a href="https://t.me/potseluev_ph" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-all">
                 <Send size={18} />
               </a>
             </div>
