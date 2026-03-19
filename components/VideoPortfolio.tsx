@@ -51,7 +51,7 @@ export default function VideoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-4">
-              Наши <span className="text-orange-500 text-shadow-orange">Работы</span>
+              Наши <span className="text-orange-500 drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Работы</span>
             </h2>
             {/* <p className="text-gray-400 max-w-xl font-light">
               Тщательно отобранная коллекция наших последних музыкальных клипов, live-сессий и визуальных проектов для артистов со всего мира.

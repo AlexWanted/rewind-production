@@ -49,7 +49,7 @@ export default function PhotoPortfolio() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
             <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-4">
-              Наши <span className="text-orange-500 text-shadow-orange">Фотосеты</span>
+              Наши <span className="text-orange-500 drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Фотосеты</span>
             </h2>
             {/* <p className="text-gray-400 max-w-xl font-light">
               Запечатлеваем сырую энергию живых выступлений, интимные студийные сессии и яркие портреты артистов.

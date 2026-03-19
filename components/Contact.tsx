@@ -35,7 +35,7 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="lg:w-1/2">
             <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-6">
-              Давайте <span className="text-orange-500 text-shadow-orange">Творить</span>
+              Давайте <span className="text-orange-500  rop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Творить</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed mb-12">
               Готовы воплотить свое видение в жизнь? Свяжитесь с нами, чтобы обсудить ваше следующее музыкальное видео или фотопроект
@@ -60,7 +60,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-widest text-gray-500 mb-1">Телефон</p>
-                  <a href="tel:+79152558875" className="text-lg font-light hover:text-orange-500 transition-colors">
+                  <a href="tel:+79152558875" className="text-lg font-light hover: drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)] transition-colors">
                     +7 (915) 255-88-75
                   </a>
                 </div>

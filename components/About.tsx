@@ -37,7 +37,7 @@ export default function About() {
             className="lg:w-1/2"
           >
             <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-8">
-              Команда <span className="text-orange-500 text-shadow-orange">Rewind</span>
+              Команда <span className="text-orange-500  drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Rewind</span>
             </h2>
             
             <div className="space-y-6 text-gray-400 font-light leading-relaxed text-lg">
@@ -54,11 +54,11 @@ export default function About() {
 
             <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-12">
               <div>
-                <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">20+</p>
+                <p className="text-7xl font-display font-bold text-orange-500  drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)] mb-2">20+</p>
                 <p className="text-2xl uppercase tracking-widest font-semibold text-white">Музыкальных Клипов</p>
               </div>
               <div>
-                <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">1000+</p>
+                <p className="text-7xl font-display font-bold text-orange-500  drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)] mb-2">1000+</p>
                 <p className="text-2xl uppercase tracking-widest font-semibold text-white">Готовых сниппетов</p>
               </div>
             </div>
