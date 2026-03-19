@@ -43,9 +43,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          className="text-5xl md:text-7xl lg:text-7xl font-display font-semibold uppercase tracking-wide leading-tight mb-4">
+          className="text-5xl md:text-7xl lg:text-7xl font-display font-semibold uppercase tracking-wider leading-tight leading-[0.85] mb-4">
           Визуал, Который <br/>
-          Говорит <span className="text-orange-500 bg-clip-text mb-12 shadow-orange-500/50">Громче
+          Говорит <span className="text-orange-500 bg-clip-text mb-12 text-shadow-orange">Громче
           </span>
         </motion.h1>
 

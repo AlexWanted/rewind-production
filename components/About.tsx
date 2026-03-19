@@ -36,8 +36,8 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:w-1/2"
           >
-            <h2 className="text-5xl md:text-7xl font-display font-semibold uppercase tracking-tighter mb-8">
-              Команда <span className="text-orange-500 shadow-orange-500/50">Rewind</span>
+            <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-8">
+              Команда <span className="text-orange-500 text-shadow-orange">Rewind</span>
             </h2>
             
             <div className="space-y-6 text-gray-400 font-light leading-relaxed text-lg">
@@ -54,12 +54,12 @@ export default function About() {
 
             <div className="mt-12 grid grid-cols-2 gap-8 border-t border-white/10 pt-12">
               <div>
-                <p className="text-7xl font-display font-bold text-orange-500 shadow-orange-500/50 mb-2">20+</p>
-                <p className="text-xs uppercase tracking-widest font-bold text-white">Музыкальных Клипов</p>
+                <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">20+</p>
+                <p className="text-2xl uppercase tracking-widest font-bold text-white">Музыкальных Клипов</p>
               </div>
               <div>
-                <p className="text-7xl font-display font-bold text-orange-500 shadow-orange-500/50 mb-2">1000+</p>
-                <p className="text-xs uppercase tracking-widest font-bold text-white">Готовых сниппетов</p>
+                <p className="text-7xl font-display font-bold text-orange-500 text-shadow-orange mb-2">1000+</p>
+                <p className="text-2xl uppercase tracking-widest font-bold text-white">Готовых сниппетов</p>
               </div>
             </div>
           </motion.div>

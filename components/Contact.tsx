@@ -34,8 +34,8 @@ export default function Contact() {
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
             className="lg:w-1/2">
-            <h2 className="text-5xl md:text-7xl font-display font-semibold uppercase tracking-tighter mb-6">
-              Давайте <span className="text-orange-500 shadow-orange-500/50">Творить</span>
+            <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-6">
+              Давайте <span className="text-orange-500 text-shadow-orange">Творить</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed mb-12">
               Готовы воплотить свое видение в жизнь? Свяжитесь с нами, чтобы обсудить ваше следующее музыкальное видео или фотопроект

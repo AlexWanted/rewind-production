@@ -40,8 +40,8 @@ export default function Services() {
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start mb-24 gap-12">
           <div className="md:w-1/2">
-            <h2 className="text-5xl md:text-7xl font-display font-semibold uppercase tracking-tighter mb-6">
-              Что Мы <span className="text-orange-500 shadow-orange-500/50">Делаем</span>
+            <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-6">
+              Что Мы <span className="text-orange-500 text-shadow-orange">Делаем</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed">
               Мы специализируемся на создании визуального контента, который усиливает музыку. Подстроимся под вашу идею и визуальный стиль
