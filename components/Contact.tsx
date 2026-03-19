@@ -38,7 +38,7 @@ export default function Contact() {
               Давайте <span className="text-orange-500">Творить</span>
             </h2>
             <p className="text-xl text-gray-400 font-light leading-relaxed mb-12">
-              Готовы воплотить свое видение в жизнь? Свяжитесь с нами, чтобы обсудить ваше следующее музыкальное видео или фотопроект.
+              Готовы воплотить свое видение в жизнь? Свяжитесь с нами, чтобы обсудить ваше следующее музыкальное видео или фотопроект
             </p>
 
             <div className="space-y-8">

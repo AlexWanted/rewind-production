@@ -28,7 +28,7 @@ export default function PhotoPortfolio() {
             if (b.order !== undefined) return 1;
             return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
           });
-          setPhotos(fetchedPhotos.slice(0, 5));
+          setPhotos(fetchedPhotos.slice(0, 4));
         } else {
           setPhotos(fallbackPhotos);
         }
