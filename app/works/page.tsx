@@ -163,7 +163,7 @@ export default function WorksPage() {
                       Концертные <span className="text-orange-500">Лайвы</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Студийные записи и концертные выступления.
+                      Концертные выступления и студийные записи.
                     </p>
                   </section>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
