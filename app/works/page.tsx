@@ -46,14 +46,14 @@ export default function WorksPage() {
       
       <section className="pt-32 pb-24 relative">
         <div className="container mx-auto px-6">
-          <div className="mb-16">
+          <section id="musicvideo" className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
               Наши <span className="text-orange-500">Клипы</span>
             </h1>
              <p className="text-gray-400 max-w-xl font-light">
               Полноценные музыкальные видео.
             </p>
-          </div>
+          </section>
 
           {loading ? (
             <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
@@ -104,15 +104,15 @@ export default function WorksPage() {
 
               {videos.some(v => v.category === 'Snippet') && (
                 <>
-                  <div className="mb-12">
+                  <section id="snippet" className="mb-12">
                     <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
                       Короткие <span className="text-orange-500">Сниппеты</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
                       Короткие видео, демонстрирующие часть трека.
                     </p>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  </section>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-24">
                     {videos.filter(v => v.category === 'Snippet').map((video, index) => (
                       <motion.div
                         key={video.id}
@@ -156,16 +156,16 @@ export default function WorksPage() {
                 </>
               )}
 
-{videos.some(v => v.category === 'Live') && (
+              {videos.some(v => v.category === 'Live') && (
                 <>
-                  <div className="mb-12">
+                  <section id="live" className="mb-12">
                     <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
                       Концертные <span className="text-orange-500">Лайвы</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
                       Студийные записи и концертные выступления.
                     </p>
-                  </div>
+                  </section>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
                     {videos.filter(v => v.category === 'Live').map((video, index) => (
                       <motion.div
@@ -194,10 +194,10 @@ export default function WorksPage() {
 
                         <div className="absolute bottom-0 left-0 p-6 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                           <h3 className="text-2xl font-display uppercase tracking-wider mb-1">
-                            {video.title}
+                            {video.artist}
                           </h3>
                           <p className="text-gray-300 text-sm font-light">
-                            {video.artist}
+                            {video.title}
                           </p>
                         </div>
                       </motion.div>
