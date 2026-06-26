@@ -15,7 +15,3 @@ jobs:
           script: |
             cd /var/www/rewind-production
             git pull origin main
-            docker compose build --network host
-            docker compose up -d
-            
-            
