@@ -7,8 +7,6 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
-
 # Порт Next.js
 EXPOSE 3000
 
