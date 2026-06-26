@@ -102,7 +102,10 @@ export default function AdminPage() {
       body: formData,
     });
 
-    if (!res.ok) throw new Error('Upload failed');
+    if (!res.ok) {
+	  const errorData = await res.json();
+	  throw new Error(errorData.error || 'Upload failed');
+	}
     const data = await res.json();
     return data.url;
   };
