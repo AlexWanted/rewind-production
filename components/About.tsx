@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { LazyMotion, m } from 'motion/react';
 import Image from 'next/image';
 
 export default function About() {
@@ -8,7 +8,7 @@ export default function About() {
     <section id="about" className="py-32 bg-zinc-950 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -20,6 +20,7 @@ export default function About() {
               src="/uploads/misc/1773881738735-441575069-_______12-03_5.jpg"
               alt="Director on set"
               fill
+              sizes="100vw"
               className="object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700"
               referrerPolicy="no-referrer"
             />
@@ -27,9 +28,9 @@ export default function About() {
               <p className="text-display uppercase tracking-widest text-sm text-orange-500 mb-1">Основано в 2018</p>
               <p className="text-white font-light text-xs uppercase tracking-wider">Базируемся в Москве</p>
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -62,7 +63,7 @@ export default function About() {
                 <p className="text-2xl uppercase tracking-widest font-semibold text-white">Готовых сниппетов</p>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

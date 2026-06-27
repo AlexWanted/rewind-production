@@ -107,14 +107,14 @@ service cloud.firestore {
     }
 
     match /videos/{videoId} {
-      allow read: if true; // Publicly readable
+      allow read: if request.auth.uid != null; // Only users with auth can read videos
       allow create: if isAdmin() && isValidVideo(request.resource.data);
       allow update: if isAdmin() && isValidVideo(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
       allow delete: if isAdmin();
     }
 
     match /photos/{photoId} {
-      allow read: if true; // Publicly readable
+      allow read: if request.auth.uid != null; // Only users with auth can read photos
       allow create: if isAdmin() && isValidPhoto(request.resource.data);
       allow update: if isAdmin() && isValidPhoto(request.resource.data) && request.resource.data.createdAt == resource.data.createdAt;
       allow delete: if isAdmin();

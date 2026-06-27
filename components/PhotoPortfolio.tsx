@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { AnimatePresence, LazyMotion, m } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PhotoModal, { PhotoData } from './PhotoModal';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { supabase, toPhotoData } from '@/lib/supabase';
 
 const fallbackPhotos: PhotoData[] = [];
 
@@ -18,15 +17,21 @@ export default function PhotoPortfolio() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const q = query(collection(db, 'photos'));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-          let fetchedPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+        const { data, error } = await supabase
+          .from('photos')
+          .select('*')
+          .order('"order"', { ascending: true })
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          let fetchedPhotos = data.map(toPhotoData);
           fetchedPhotos.sort((a, b) => {
             if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
             if (a.order !== undefined) return -1;
             if (b.order !== undefined) return 1;
-            return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
           setPhotos(fetchedPhotos.slice(0, 4));
         } else {
@@ -51,9 +56,6 @@ export default function PhotoPortfolio() {
             <h2 className="text-5xl md:text-7xl font-display font-medium uppercase tracking-normal mb-4">
               Наши <span className="text-orange-500 drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Фотосеты</span>
             </h2>
-            {/* <p className="text-gray-400 max-w-xl font-light">
-              Запечатлеваем сырую энергию живых выступлений, интимные студийные сессии и яркие портреты артистов.
-            </p> */}
           </div>
           <Link href="/photography" className="px-6 py-3 border border-white/20 text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-colors rounded-sm text-center">
             Больше Фотографий
@@ -65,7 +67,7 @@ export default function PhotoPortfolio() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
             {photos.map((photo, index) => (
-              <motion.div
+              <m.div
                 key={photo.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -77,11 +79,12 @@ export default function PhotoPortfolio() {
                   src={photo.images?.[0] || photo.src || ''}
                   alt={photo.alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
                   referrerPolicy="no-referrer"/>
                 {/* Легкое затемнение при наведении, без кнопки View */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.div>
+              </m.div>
             ))}
           </div>
         )}

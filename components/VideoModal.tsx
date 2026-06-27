@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { AnimatePresence, LazyMotion, m } from 'motion/react';
 import { X } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -35,19 +35,20 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
   }, []);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl"
       onClick={onClose}>
-      <button
-        onClick={onClose}
-        className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md">
-        <X size={28} />
-      </button>
+<button
+          type="button"
+          onClick={onClose}
+          className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md">
+          <X size={28} />
+        </button>
 
-      <motion.div
+      <m.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -109,7 +110,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }

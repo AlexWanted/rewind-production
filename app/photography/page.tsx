@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { AnimatePresence, LazyMotion, m } from 'motion/react';
 import Image from 'next/image';
 import PhotoModal, { PhotoData } from '@/components/PhotoModal';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { supabase, toPhotoData } from '@/lib/supabase';
 
 export default function PhotographyPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoData | null>(null);
@@ -17,15 +16,21 @@ export default function PhotographyPage() {
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const q = query(collection(db, 'photos'));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-          const fetchedPhotos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+        const { data, error } = await supabase
+          .from('photos')
+          .select('*')
+          .order('"order"', { ascending: true })
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          const fetchedPhotos = data.map(toPhotoData);
           fetchedPhotos.sort((a, b) => {
             if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
             if (a.order !== undefined) return -1;
             if (b.order !== undefined) return 1;
-            return (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0);
+            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
           setPhotos(fetchedPhotos);
         }
@@ -47,19 +52,16 @@ export default function PhotographyPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Наши <span className="text-orange-500">Фотосеты</span>
+              Photography <span className="text-orange-500">Portfolio</span>
             </h1>
-            {/* <p className="text-gray-400 max-w-xl font-light">
-              Изучите наш полный архив живых выступлений, интимных студийных сессий и ярких портретов артистов.
-            </p> */}
           </div>
 
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
+            <div className="h-64 flex items-center justify-center text-white">Loading...</div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
               {photos.map((photo, index) => (
-                <motion.div
+                <m.div
                   key={photo.id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -71,10 +73,11 @@ export default function PhotographyPage() {
                     src={photo.images?.[0] || photo.src || ''}
                     alt={photo.alt}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
                     referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </motion.div>
+                </m.div>
               ))}
             </div>
           )}

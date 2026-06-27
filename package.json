@@ -12,10 +12,13 @@
   "dependencies": {
     "@google/genai": "^1.17.0",
     "@hookform/resolvers": "^5.2.1",
+    "@supabase/supabase-js": "^2.45.0",
+    "@types/ftp": "^0.3.36",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^12.10.0",
+    "ftp": "^0.3.10",
     "lucide-react": "^0.553.0",
     "motion": "^12.23.24",
     "next": "^15.4.9",

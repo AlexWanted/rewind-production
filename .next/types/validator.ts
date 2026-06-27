@@ -122,3 +122,21 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   // @ts-ignore
   type __Unused = __Check
 }
+
+// Validate ../../app/photography/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/photography">> = Specific
+  const handler = {} as typeof import("../../app/photography/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/works/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/works">> = Specific
+  const handler = {} as typeof import("../../app/works/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}

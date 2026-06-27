@@ -1,9 +1,14 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
+import { AnimatePresence, LazyMotion, m } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
 
 export type PhotoData = {
   id: string;
@@ -53,9 +58,6 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
   };
 
   const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity;
-  };
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -65,21 +67,22 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
   }, []);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-8 bg-black/95 backdrop-blur-xl"
       onClick={onClose}
     >
-      <button
-        onClick={onClose}
-        className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md"
-      >
-        <X size={28} />
-      </button>
+<button
+          type="button"
+          onClick={onClose}
+          className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/50 p-2 rounded-full backdrop-blur-md"
+        >
+          <X size={28} />
+        </button>
 
-      <motion.div
+      <m.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -89,7 +92,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
         {/* Секция с изображением */}
         <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[50vh] lg:min-h-[80vh] group">
           <AnimatePresence initial={false} custom={direction}>
-            <motion.div
+            <m.div
               key={currentIndex}
               custom={direction}
               variants={variants}
@@ -119,23 +122,26 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
                   src={images[currentIndex]}
                   alt={`${photo.alt} - Image ${currentIndex + 1}`}
                   fill
+                  sizes="100vw"
                   className="object-contain pointer-events-none"
                   referrerPolicy="no-referrer"
                   draggable={false}
                 />
               )}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
 
           {images.length > 1 && (
             <>
               <button
+                type="button"
                 onClick={(e) => { e.stopPropagation(); paginate(-1); }}
                 className="absolute left-4 p-2 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 z-10"
               >
                 <ChevronLeft size={24} />
               </button>
               <button
+                type="button"
                 onClick={(e) => { e.stopPropagation(); paginate(1); }}
                 className="absolute right-4 p-2 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/80 z-10"
               >
@@ -189,7 +195,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }

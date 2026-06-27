@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { LazyMotion, m } from 'motion/react';
 import { Mail, Phone, Instagram, Youtube, Send } from 'lucide-react';
 
 export default function Contact() {
@@ -28,7 +28,7 @@ export default function Contact() {
     <section id="contact" className="py-32 bg-black relative border-t border-white/5">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row justify-between items-start gap-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -90,9 +90,9 @@ export default function Contact() {
                 <Send size={18} />
               </a>
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -174,7 +174,7 @@ export default function Contact() {
                 Отправить сообщение
               </button>
             </form>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>
