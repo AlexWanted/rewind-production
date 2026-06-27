@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
     await writeFile(filepath, buffer);
 
     console.log('File written successfully!');
-    const url = `/uploads/${folder}/${filename}`;
+    const baseUrl = process.env.APP_URL || '';
+    const url = `${baseUrl}/uploads/${folder}/${filename}`;
     
     return NextResponse.json({ url });
   } catch (error: any) {
