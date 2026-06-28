@@ -15,19 +15,19 @@
       "static/css/4d2219677cb4c5ee.css",
       "static/chunks/app/layout-a3d057e033e6bc65.js"
     ],
-    "/api/uploads/[...path]/route": [
-      "static/chunks/webpack-1017649d66d1259f.js",
-      "static/chunks/4bd1b696-21f374d1156f834a.js",
-      "static/chunks/255-a41b0d888672637a.js",
-      "static/chunks/main-app-b31048430ae79b39.js",
-      "static/chunks/app/api/uploads/[...path]/route-554690559f122c41.js"
-    ],
     "/api/files/route": [
       "static/chunks/webpack-1017649d66d1259f.js",
       "static/chunks/4bd1b696-21f374d1156f834a.js",
       "static/chunks/255-a41b0d888672637a.js",
       "static/chunks/main-app-b31048430ae79b39.js",
       "static/chunks/app/api/files/route-554690559f122c41.js"
+    ],
+    "/api/uploads/[...path]/route": [
+      "static/chunks/webpack-1017649d66d1259f.js",
+      "static/chunks/4bd1b696-21f374d1156f834a.js",
+      "static/chunks/255-a41b0d888672637a.js",
+      "static/chunks/main-app-b31048430ae79b39.js",
+      "static/chunks/app/api/uploads/[...path]/route-554690559f122c41.js"
     ],
     "/api/upload/route": [
       "static/chunks/webpack-1017649d66d1259f.js",
