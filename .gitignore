@@ -3,3 +3,7 @@ coverage/
 .DS_Store
 *.log
 !.env.example
+.next
+supabase-schema.sql
+README.md
+.planning
