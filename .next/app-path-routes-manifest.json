@@ -2,11 +2,11 @@
   "/_not-found/page": "/_not-found",
   "/apple-icon.png/route": "/apple-icon.png",
   "/favicon.ico/route": "/favicon.ico",
-  "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/api/files/route": "/api/files",
   "/api/upload/route": "/api/upload",
+  "/api/uploads/[...path]/route": "/api/uploads/[...path]",
   "/admin/page": "/admin",
   "/page": "/",
-  "/photography/page": "/photography",
-  "/works/page": "/works"
+  "/works/page": "/works",
+  "/photography/page": "/photography"
 }
