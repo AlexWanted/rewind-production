@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import PhotoModal, { PhotoData } from '@/components/PhotoModal';
 import Navbar from '@/components/Navbar';
@@ -61,7 +61,7 @@ export default function PhotographyPage() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
               {photos.map((photo, index) => (
-                <m.div
+                <motion.div
                   key={photo.id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -77,7 +77,7 @@ export default function PhotographyPage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 grayscale group-hover:grayscale-0"
                     referrerPolicy="no-referrer" />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </m.div>
+                </motion.div>
               ))}
             </div>
           )}

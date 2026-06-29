@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -67,7 +67,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
   }, []);
 
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -82,7 +82,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
           <X size={28} />
         </button>
 
-      <m.div
+      <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -92,7 +92,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
         {/* Секция с изображением */}
         <div className="w-full lg:w-2/3 bg-black flex items-center justify-center relative min-h-[50vh] lg:min-h-[80vh] group">
           <AnimatePresence initial={false} custom={direction}>
-            <m.div
+            <motion.div
               key={currentIndex}
               custom={direction}
               variants={variants}
@@ -128,7 +128,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
                   draggable={false}
                 />
               )}
-            </m.div>
+            </motion.div>
           </AnimatePresence>
 
           {images.length > 1 && (
@@ -195,7 +195,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
             )}
           </div>
         </div>
-      </m.div>
-    </m.div>
+      </motion.div>
+    </motion.div>
   );
 }

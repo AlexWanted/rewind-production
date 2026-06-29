@@ -7,3 +7,4 @@ coverage/
 supabase-schema.sql
 README.md
 .planning
+.planning-debug

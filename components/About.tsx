@@ -1,6 +1,6 @@
 'use client';
 
-import { LazyMotion, m } from 'motion/react';
+import { LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 
 export default function About() {
@@ -8,7 +8,7 @@ export default function About() {
     <section id="about" className="py-32 bg-zinc-950 relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="flex flex-col lg:flex-row items-center gap-16">
-          <m.div
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -28,9 +28,9 @@ export default function About() {
               <p className="text-display uppercase tracking-widest text-sm text-orange-500 mb-1">Основано в 2018</p>
               <p className="text-white font-light text-xs uppercase tracking-wider">Базируемся в Москве</p>
             </div>
-          </m.div>
+          </motion.div>
 
-          <m.div
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-100px' }}
@@ -63,7 +63,7 @@ export default function About() {
                 <p className="text-2xl uppercase tracking-widest font-semibold text-white">Готовых сниппетов</p>
               </div>
             </div>
-          </m.div>
+          </motion.div>
         </div>
       </div>
     </section>

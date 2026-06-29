@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
 interface UseAdminDataProps {
@@ -19,6 +19,8 @@ interface UseAdminDataProps {
 }
 
 export function useAdminData({ videos, setVideos, snippets, setSnippets, lives, setLives, photos, setPhotos, files, setFiles, loading, setLoading }: UseAdminDataProps) {
+  const [hasFetched, setHasFetched] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -45,14 +47,15 @@ export function useAdminData({ videos, setVideos, snippets, setSnippets, lives, 
       // Don't alert on fetch errors - let the UI handle it
     } finally {
       setLoading(false);
+      setHasFetched(true);
     }
   };
 
   useEffect(() => {
-    if (loading) {
+    if (loading && !hasFetched) {
       fetchData();
     }
-  }, [loading]);
+  }, [loading, hasFetched]);
 
   return { fetchData };
 }

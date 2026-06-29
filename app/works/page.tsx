@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import { Play } from 'lucide-react';
 import VideoModal, { VideoData } from '@/components/VideoModal';
@@ -66,7 +66,7 @@ export default function WorksPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
                 {videos.filter(v => v.category !== 'Snippet' && v.category !== 'Live').map((video, index) => (
-                  <m.div
+                  <motion.div
                     key={video.id}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export default function WorksPage() {
                         {video.artist}
                       </p>
                     </div>
-                   </m.div>
+                   </motion.div>
                ))}
               </div>
 
@@ -120,7 +120,7 @@ export default function WorksPage() {
                   </section>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-24">
                     {videos.filter(v => v.category === 'Snippet').map((video, index) => (
-                      <m.div
+                      <motion.div
                         key={video.id}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -157,7 +157,7 @@ export default function WorksPage() {
                             {video.artist}
                           </p>
                         </div>
-                      </m.div>
+                      </motion.div>
                     ))}
                   </div>
                 </>
@@ -175,7 +175,7 @@ export default function WorksPage() {
                   </section>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
                     {videos.filter(v => v.category === 'Live').map((video, index) => (
-                      <m.div
+                      <motion.div
                         key={video.id}
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -207,7 +207,7 @@ export default function WorksPage() {
                             {video.title}
                           </p>
                         </div>
-                      </m.div>
+                      </motion.div>
                     ))}
                   </div>
                 </>

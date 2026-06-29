@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PhotoModal, { PhotoData } from './PhotoModal';
@@ -67,7 +67,7 @@ export default function PhotoPortfolio() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
             {photos.map((photo, index) => (
-              <m.div
+              <motion.div
                 key={photo.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -84,7 +84,7 @@ export default function PhotoPortfolio() {
                   referrerPolicy="no-referrer"/>
                 {/* Легкое затемнение при наведении, без кнопки View */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </m.div>
+              </motion.div>
             ))}
           </div>
         )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
@@ -69,7 +69,7 @@ export default function VideoPortfolio() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {videos.map((video, index) => (
-              <m.div
+              <motion.div
                 key={video.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -107,7 +107,7 @@ export default function VideoPortfolio() {
                     {video.artist}
                   </p>
                 </div>
-              </m.div>
+              </motion.div>
             ))}
           </div>
         )}

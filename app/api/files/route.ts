@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readdir, stat, unlink } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
+import { listFilesFromFTP } from '@/lib/ftp';
 
 export const dynamic = 'force-dynamic';
 
-// Move file reading to module scope to avoid reading on every request
 const readDirRecursive = async (dir: string, currentPath: string): Promise<any[]> => {
   const entries = await readdir(dir, { withFileTypes: true });
 
@@ -33,15 +33,23 @@ const readDirRecursive = async (dir: string, currentPath: string): Promise<any[]
 
 export async function GET(request: NextRequest) {
   try {
-    const uploadsDir = join(process.cwd(), 'public', 'uploads');
+    // Try FTP first
+    try {
+      const files = await listFilesFromFTP('');
+      return NextResponse.json({ files });
+    } catch (ftpError: any) {
+      console.warn('FTP listing failed, falling back to local:', ftpError.message);
 
-    if (!existsSync(uploadsDir)) {
-      return NextResponse.json({ files: [] });
+      // Fallback to local filesystem
+      const uploadsDir = join(process.cwd(), 'public', 'uploads');
+
+      if (!existsSync(uploadsDir)) {
+        return NextResponse.json({ files: [] });
+      }
+
+      const files = await readDirRecursive(uploadsDir, '');
+      return NextResponse.json({ files });
     }
-
-    const files = await readDirRecursive(uploadsDir, '');
-    
-    return NextResponse.json({ files });
   } catch (error: any) {
     console.error('Error reading files:', error);
     return NextResponse.json({ error: 'Failed to read files' }, { status: 500 });

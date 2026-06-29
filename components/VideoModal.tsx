@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, LazyMotion, m } from 'motion/react';
+import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -35,7 +35,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
   }, []);
 
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -48,7 +48,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           <X size={28} />
         </button>
 
-      <m.div
+      <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -110,7 +110,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
             )}
           </div>
         </div>
-      </m.div>
-    </m.div>
+      </motion.div>
+    </motion.div>
   );
 }

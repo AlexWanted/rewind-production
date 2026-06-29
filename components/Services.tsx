@@ -1,6 +1,6 @@
 'use client';
 
-import { LazyMotion, m } from 'motion/react';
+import { LazyMotion, motion } from 'motion/react';
 import { Video, Camera, Mic2, Clapperboard } from 'lucide-react';
 
 const services = [
@@ -51,7 +51,7 @@ export default function Services() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
           {services.map((service, index) => (
-            <m.div
+            <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ export default function Services() {
               <p>
               От <span className="text-orange-500 mb-4">{service.price}</span> тыс. рублей
               </p>
-            </m.div>
+            </motion.div>
           ))}
         </div>
       </div>

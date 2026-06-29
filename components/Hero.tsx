@@ -1,6 +1,6 @@
 'use client';
 
-import { LazyMotion, m } from 'motion/react';
+import { LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import { PlayCircle } from 'lucide-react';
 import { useRef, useEffect } from 'react';
@@ -39,7 +39,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center">
 
-        <m.h1
+        <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
@@ -47,17 +47,17 @@ export default function Hero() {
           Визуал, Который <br/>
           Говорит <span className="text-orange-500 bg-clip-text mb-12 drop-shadow-[0px_0px_23px_rgba(255,89,0,0.6)]">Громче
           </span>
-        </m.h1>
+        </motion.h1>
 
-        <m.p
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
           className="text-lg md:text-xl text-gray-400 max-w-2xl mb-12 font-light">
           Мы создаем кинематографичный визуальный контент для артистов, который запоминается
-        </m.p>
+        </motion.p>
 
-        <m.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
@@ -71,7 +71,7 @@ export default function Hero() {
             <PlayCircle size={48} strokeWidth={1} className="group-hover:scale-110 transition-transform duration-300 text-orange-500" />
             <span className="text-sm font-medium uppercase tracking-widest">Шоурил</span>
           </button> */}
-        </m.div>
+        </motion.div>
       </div>
     </section>
   );
