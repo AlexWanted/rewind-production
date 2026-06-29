@@ -3,19 +3,28 @@
 import { LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import { PlayCircle } from 'lucide-react';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
+import { presignUrls } from '@/lib/presign';
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoUrl, setVideoUrl] = useState<string>('');
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(error => {
-        console.error("Video autoplay failed:", error);
-      });
-    }
+    const fetchVideoUrl = async () => {
+      const urls = await presignUrls(['misc/1773867797446-85208419-site-banner.mp4']);
+      const url = urls['misc/1773867797446-85208419-site-banner.mp4'];
+      if (url) {
+        setVideoUrl(url);
+        if (videoRef.current) {
+          videoRef.current.load();
+          videoRef.current.play().catch(error => {
+            console.error("Video autoplay failed:", error);
+          });
+        }
+      }
+    };
+    fetchVideoUrl();
   }, []);
 
   return (
@@ -31,7 +40,7 @@ export default function Hero() {
 		      data-video-initialized="true"
 		      preload="auto"
           className="object-cover w-full h-full opacity-50">
-          <source src="/uploads/misc/1773867797446-85208419-site-banner.mp4" type="video/mp4" />
+          {videoUrl && <source src={videoUrl} type="video/mp4" />}
         </video>
         <div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/15 to-black" />
       </div>

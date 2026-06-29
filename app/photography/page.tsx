@@ -7,6 +7,7 @@ import PhotoModal, { PhotoData } from '@/components/PhotoModal';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { supabase, toPhotoData } from '@/lib/supabase';
+import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 export default function PhotographyPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoData | null>(null);
@@ -32,6 +33,25 @@ export default function PhotographyPage() {
             if (b.order !== undefined) return 1;
             return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
+
+          const allKeys: string[] = [];
+          fetchedPhotos.forEach(p => {
+            (p.images || []).forEach(img => {
+              const key = extractKeyFromUrl(img);
+              if (key) allKeys.push(key);
+            });
+          });
+
+          if (allKeys.length > 0) {
+            const presigned = await presignUrls(allKeys);
+            fetchedPhotos.forEach(p => {
+              p.images = (p.images || []).map(img => {
+                const key = extractKeyFromUrl(img);
+                return (key && presigned[key]) ? presigned[key] : img;
+              });
+            });
+          }
+
           setPhotos(fetchedPhotos);
         }
       } catch (error) {
@@ -52,12 +72,12 @@ export default function PhotographyPage() {
         <div className="container mx-auto px-6">
           <div className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Photography <span className="text-orange-500">Portfolio</span>
+              Наши <span className="text-orange-500">Фотосеты</span>
             </h1>
           </div>
 
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+            <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
               {photos.map((photo, index) => (

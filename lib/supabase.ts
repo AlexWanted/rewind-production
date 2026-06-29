@@ -61,6 +61,34 @@ export interface PhotoData {
   updatedAt?: string;
 }
 
+const S3_PUBLIC_URL = process.env.S3_PUBLIC_URL || 'https://s3.cloud.ru/bucket-8c74b8';
+
+function normalizeImageUrl(url: string): string {
+  if (!url) return url;
+  
+  // Already a full URL (S3, FTP, etc.) - pass through
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // Handle /uploads/... or uploads/... paths
+  const cleanPath = url.replace(/^\/uploads\//, '').replace(/^uploads\//, '');
+  if (cleanPath !== url || url.startsWith('/uploads/') || url.startsWith('uploads/')) {
+    return `${S3_PUBLIC_URL}/${cleanPath}`;
+  }
+  
+  // If it's a relative path without uploads prefix, assume it's under uploads
+  if (url.startsWith('/')) {
+    return `${S3_PUBLIC_URL}${url}`;
+  }
+  
+  return url;
+}
+
+function normalizeImages(images: string[]): string[] {
+  return images.map(normalizeImageUrl);
+}
+
 // Helper to convert Supabase data to app types
 export function toVideoData(data: any): VideoData {
   return {
@@ -68,8 +96,8 @@ export function toVideoData(data: any): VideoData {
     title: data.title,
     artist: data.artist,
     category: data.category,
-    image: data.image,
-    videoUrl: data.video_url,
+    image: normalizeImageUrl(data.image),
+    videoUrl: normalizeImageUrl(data.video_url),
     year: data.year,
     director: data.director,
     cinematographer: data.cinematographer,
@@ -85,7 +113,7 @@ export function toVideoData(data: any): VideoData {
 export function toPhotoData(data: any): PhotoData {
   return {
     id: data.id,
-    images: data.images || [],
+    images: normalizeImages(data.images || []),
     alt: data.alt,
     photographer: data.photographer,
     location: data.location,

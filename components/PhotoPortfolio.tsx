@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import PhotoModal, { PhotoData } from './PhotoModal';
 import { supabase, toPhotoData } from '@/lib/supabase';
+import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 const fallbackPhotos: PhotoData[] = [];
 
@@ -33,7 +34,27 @@ export default function PhotoPortfolio() {
             if (b.order !== undefined) return 1;
             return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
-          setPhotos(fetchedPhotos.slice(0, 4));
+          const sliced = fetchedPhotos.slice(0, 4);
+
+          const allKeys: string[] = [];
+          sliced.forEach(p => {
+            (p.images || []).forEach(img => {
+              const key = extractKeyFromUrl(img);
+              if (key) allKeys.push(key);
+            });
+          });
+
+          if (allKeys.length > 0) {
+            const presigned = await presignUrls(allKeys);
+            sliced.forEach(p => {
+              p.images = (p.images || []).map(img => {
+                const key = extractKeyFromUrl(img);
+                return (key && presigned[key]) ? presigned[key] : img;
+              });
+            });
+          }
+
+          setPhotos(sliced);
         } else {
           setPhotos(fallbackPhotos);
         }

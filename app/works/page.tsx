@@ -8,6 +8,7 @@ import VideoModal, { VideoData } from '@/components/VideoModal';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { supabase, toVideoData } from '@/lib/supabase';
+import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 export default function WorksPage() {
   const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null);
@@ -33,6 +34,25 @@ export default function WorksPage() {
             if (b.order !== undefined) return 1;
             return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
+
+          const allKeys: string[] = [];
+          fetchedVideos.forEach(v => {
+            const imgKey = extractKeyFromUrl(v.image);
+            if (imgKey) allKeys.push(imgKey);
+            const vidKey = extractKeyFromUrl(v.videoUrl);
+            if (vidKey) allKeys.push(vidKey);
+          });
+
+          if (allKeys.length > 0) {
+            const presigned = await presignUrls(allKeys);
+            fetchedVideos.forEach(v => {
+              const imgKey = extractKeyFromUrl(v.image);
+              if (imgKey && presigned[imgKey]) v.image = presigned[imgKey];
+              const vidKey = extractKeyFromUrl(v.videoUrl);
+              if (vidKey && presigned[vidKey]) v.videoUrl = presigned[vidKey];
+            });
+          }
+
           setVideos(fetchedVideos);
         }
       } catch (error) {
@@ -53,15 +73,15 @@ export default function WorksPage() {
         <div className="container mx-auto px-6">
           <section id="musicvideo" className="mb-16">
             <h1 className="text-5xl md:text-7xl font-display uppercase tracking-tighter mb-4">
-              Works <span className="text-orange-500">Portfolio</span>
+              Наши <span className="text-orange-500">Клипы</span>
             </h1>
              <p className="text-gray-400 max-w-xl font-light">
-              Selected music videos, commercials, and documentaries.
+              Полноценные музыкальные видео.
             </p>
           </section>
 
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-white">Loading...</div>
+            <div className="h-64 flex items-center justify-center text-white">Загрузка...</div>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
@@ -112,10 +132,10 @@ export default function WorksPage() {
                 <>
                   <section id="snippet" className="mb-12">
                     <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
-                      Short <span className="text-orange-500">Snippets</span>
+                      Короткие <span className="text-orange-500">Сниппеты</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Quick cuts, teasers, and experimental pieces.
+                      Короткие видео, демонстрирующие часть трека.
                     </p>
                   </section>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-24">
@@ -167,10 +187,10 @@ export default function WorksPage() {
                 <>
                   <section id="live" className="mb-12">
                     <h2 className="text-4xl md:text-5xl font-display uppercase tracking-tighter mb-4">
-                      Live <span className="text-orange-500">Sessions</span>
+                      Концертные <span className="text-orange-500">Лайвы</span>
                     </h2>
                     <p className="text-gray-400 max-w-xl font-light">
-                      Live performances captured in their raw energy.
+                      Концертные выступления и студийные записи.
                     </p>
                   </section>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">

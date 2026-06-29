@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { join } from 'path';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
-import { getFileFromFTP } from '@/lib/ftp';
+import { getFileFromS3 } from '@/lib/s3';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,9 +32,9 @@ export async function GET(
     const { path: pathSegments } = await params;
     const relativePath = pathSegments.join('/');
 
-    // Try FTP first
+    // Try S3 first
     try {
-      const fileBuffer = await getFileFromFTP(relativePath);
+      const fileBuffer = await getFileFromS3(relativePath);
       
       const ext = pathSegments[pathSegments.length - 1]?.split('.').pop();
       const contentType = getContentType(ext);
@@ -45,16 +45,17 @@ export async function GET(
           'Cache-Control': 'public, max-age=31536000, immutable',
         },
       });
-    } catch (ftpError: any) {
-      const isNotFound = ftpError.message === 'FILE_NOT_FOUND';
+    } catch (s3Error: any) {
+      const isNotFound = s3Error.message === 'FILE_NOT_FOUND';
       const isConnectionError = 
-        ftpError.code === 'ECONNREFUSED' || 
-        ftpError.code === 'ETIMEDOUT' ||
-        ftpError.message.includes('timeout') ||
-        ftpError.message.includes('connection');
+        s3Error.code === 'ECONNREFUSED' || 
+        s3Error.code === 'ETIMEDOUT' ||
+        s3Error.message.includes('timeout') ||
+        s3Error.message.includes('connection') ||
+        s3Error.name === 'NetworkingError';
 
       if (!isNotFound && !isConnectionError) {
-        console.error('FTP error serving file:', ftpError);
+        console.error('S3 error serving file:', s3Error);
       }
 
       // Fallback to local

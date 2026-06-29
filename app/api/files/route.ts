@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readdir, stat, unlink } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
-import { listFilesFromFTP } from '@/lib/ftp';
+import { listFilesFromS3, deleteFromS3 } from '@/lib/s3';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,12 +33,12 @@ const readDirRecursive = async (dir: string, currentPath: string): Promise<any[]
 
 export async function GET(request: NextRequest) {
   try {
-    // Try FTP first
+    // Try S3 first
     try {
-      const files = await listFilesFromFTP('');
+      const files = await listFilesFromS3('');
       return NextResponse.json({ files });
-    } catch (ftpError: any) {
-      console.warn('FTP listing failed, falling back to local:', ftpError.message);
+    } catch (s3Error: any) {
+      console.warn('S3 listing failed, falling back to local:', s3Error.message);
 
       // Fallback to local filesystem
       const uploadsDir = join(process.cwd(), 'public', 'uploads');
@@ -65,13 +65,25 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid file path' }, { status: 400 });
     }
 
-    const absolutePath = join(process.cwd(), 'public', filePath);
+    // Extract S3 key from path
+    const key = filePath.replace(/^\/uploads\//, '');
 
-    if (existsSync(absolutePath)) {
-      await unlink(absolutePath);
+    // Try S3 delete first
+    try {
+      await deleteFromS3(key);
       return NextResponse.json({ success: true });
-    } else {
-      return NextResponse.json({ error: 'File not found' }, { status: 404 });
+    } catch (s3Error: any) {
+      console.warn('S3 delete failed, falling back to local:', s3Error.message);
+
+      // Fallback to local
+      const absolutePath = join(process.cwd(), 'public', filePath);
+
+      if (existsSync(absolutePath)) {
+        await unlink(absolutePath);
+        return NextResponse.json({ success: true });
+      } else {
+        return NextResponse.json({ error: 'File not found' }, { status: 404 });
+      }
     }
   } catch (error: any) {
     console.error('Error deleting file:', error);

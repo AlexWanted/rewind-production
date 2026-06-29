@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Play } from 'lucide-react';
 import VideoModal, { VideoData } from './VideoModal';
 import { supabase, toVideoData } from '@/lib/supabase';
+import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 const fallbackVideos: VideoData[] = [];
 
@@ -35,7 +36,27 @@ export default function VideoPortfolio() {
             if (b.order !== undefined) return 1;
             return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
           });
-          setVideos(fetchedVideos.slice(0, 4));
+          const sliced = fetchedVideos.slice(0, 4);
+
+          const allKeys: string[] = [];
+          sliced.forEach(v => {
+            const imgKey = extractKeyFromUrl(v.image);
+            if (imgKey) allKeys.push(imgKey);
+            const vidKey = extractKeyFromUrl(v.videoUrl);
+            if (vidKey) allKeys.push(vidKey);
+          });
+
+          if (allKeys.length > 0) {
+            const presigned = await presignUrls(allKeys);
+            sliced.forEach(v => {
+              const imgKey = extractKeyFromUrl(v.image);
+              if (imgKey && presigned[imgKey]) v.image = presigned[imgKey];
+              const vidKey = extractKeyFromUrl(v.videoUrl);
+              if (vidKey && presigned[vidKey]) v.videoUrl = presigned[vidKey];
+            });
+          }
+
+          setVideos(sliced);
         } else {
           setVideos(fallbackVideos);
         }
