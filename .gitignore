@@ -5,10 +5,10 @@ node_modules/*
 .next/*
 supabase-schema.sql
 README.md
-planning/
-planning/*
-planning-debug/
-planning-debug/*
+.planning/
+.planning/*
+.planning-debug/
+.planning-debug/*
 uploads/
 uploads/*
 scripts/*

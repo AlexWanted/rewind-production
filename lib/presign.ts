@@ -1,18 +1,45 @@
+// ponytail: presigned URL живут 7 дней, кешируем на час (продлено с 1ч до 6ч)
+const presignCache = new Map<string, { urls: Record<string, string>; expiry: number }>();
+
+async function fetchPresign(keys: string[], attempt = 1): Promise<Record<string, string> | null> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+
+    const response = await fetch('/api/presign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ keys }),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+
+    if (!response.ok) return null;
+    const { urls } = await response.json();
+    return urls;
+  } catch {
+    if (attempt < 2) {
+      await new Promise(r => setTimeout(r, 1000));
+      return fetchPresign(keys, attempt + 1);
+    }
+    return null;
+  }
+}
+
 export async function presignUrls(keys: string[]): Promise<Record<string, string>> {
   if (keys.length === 0) return {};
 
-  const response = await fetch('/api/presign', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ keys }),
-  });
+  const cacheKey = [...keys].sort().join('\x00');
+  const cached = presignCache.get(cacheKey);
+  if (cached && cached.expiry > Date.now()) return cached.urls;
 
-  if (!response.ok) {
+  const urls = await fetchPresign(keys);
+  if (!urls) {
     console.error('Failed to presign URLs');
     return {};
   }
 
-  const { urls } = await response.json();
+  presignCache.set(cacheKey, { urls, expiry: Date.now() + 21_600_000 }); // 6ч кеша
   return urls;
 }
 

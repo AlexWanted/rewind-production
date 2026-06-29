@@ -18,13 +18,14 @@ export default function Hero() {
         setVideoUrl(url);
         if (videoRef.current) {
           videoRef.current.load();
-          videoRef.current.play().catch(error => {
-            console.error("Video autoplay failed:", error);
-          });
+          videoRef.current.play().catch(() => {});
         }
       }
     };
     fetchVideoUrl();
+    const handleInteraction = () => videoRef.current?.play();
+    document.addEventListener('click', handleInteraction, { once: true });
+    return () => document.removeEventListener('click', handleInteraction);
   }, []);
 
   return (

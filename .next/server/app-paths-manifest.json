@@ -1,8 +1,0 @@
-{
-  "/api/presign/route": "app/api/presign/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/works/page": "app/works/page.js",
-  "/photography/page": "app/photography/page.js"
-}

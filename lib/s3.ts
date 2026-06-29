@@ -1,12 +1,6 @@
-import { 
-  S3Client, 
-  GetObjectCommand, 
-  ListObjectsV2Command, 
-  PutObjectCommand, 
-  DeleteObjectCommand,
-  type S3ClientConfig 
-} from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, ListObjectsV2Command, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { NodeHttpHandler } from '@smithy/node-http-handler';
 
 let cachedClient: S3Client | null = null;
 let cachedConfig: { bucket: string; region: string; endpoint: string; publicUrl: string } | null = null;
@@ -45,7 +39,12 @@ function getClient(): S3Client {
       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
     },
     forcePathStyle: true,
-  } as S3ClientConfig);
+    requestHandler: new NodeHttpHandler({
+      connectionTimeout: 5000,
+      requestTimeout: 30000,
+    }),
+    maxAttempts: 2,
+  });
 
   cachedClient.middlewareStack.remove('getChecksumPlugin');
   

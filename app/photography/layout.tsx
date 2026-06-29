@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Photography | Rewind Production',
-  description: 'Professional photography portfolio featuring brand photography, editorial shoots, and visual storytelling.',
+  title: 'Фотосеты | rewind production',
+  description: 'Профессиональные фотосеты для артистов.',
   keywords: ['photography', 'brand photography', 'editorial', 'visual storytelling', 'product photography'],
   openGraph: {
-    title: 'Photography | Rewind Production',
-    description: 'Professional photography portfolio',
+    title: 'Фотосеты | rewind production',
+    description: 'Профессиональные фотосеты для артистов',
     type: 'website',
     url: 'https://rewind-production.com/photography',
   },

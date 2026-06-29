@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Works | Rewind Production',
-  description: 'Portfolio showcasing Rewind Production\'s best work - music videos, commercials, documentaries, and creative projects.',
+  title: 'Работы | rewind production',
+  description: 'Портфолио с лучшими работами rewind production - клипы, сниппеты, концерты.',
   keywords: ['portfolio', 'music videos', 'commercials', 'documentaries', 'creative work', 'portfolio'],
   openGraph: {
-    title: 'Works | Rewind Production',
-    description: 'Portfolio showcasing best work',
+    title: 'Работы | rewind production',
+    description: 'Портфолио с лучшими работами',
     type: 'website',
     url: 'https://rewind-production.com/works',
   },

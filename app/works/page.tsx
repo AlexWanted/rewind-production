@@ -7,7 +7,7 @@ import { Play } from 'lucide-react';
 import VideoModal, { VideoData } from '@/components/VideoModal';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { supabase, toVideoData } from '@/lib/supabase';
+import { supabase, toVideoData, PUBLIC_VIDEO_FIELDS } from '@/lib/supabase';
 import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 export default function WorksPage() {
@@ -20,7 +20,7 @@ export default function WorksPage() {
       try {
         const { data, error } = await supabase
           .from('videos')
-          .select('*')
+          .select(PUBLIC_VIDEO_FIELDS)
           .order('"order"', { ascending: true })
           .order('created_at', { ascending: false });
         
@@ -28,12 +28,6 @@ export default function WorksPage() {
         
         if (data && data.length > 0) {
           const fetchedVideos = data.map(toVideoData);
-          fetchedVideos.sort((a, b) => {
-            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
-            if (a.order !== undefined) return -1;
-            if (b.order !== undefined) return 1;
-            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
-          });
 
           const allKeys: string[] = [];
           fetchedVideos.forEach(v => {
@@ -98,7 +92,7 @@ export default function WorksPage() {
                       src={video.image}
                       alt={video.title}
                       fill
-                      sizes="100vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                       referrerPolicy="no-referrer"
                     />
@@ -152,7 +146,7 @@ export default function WorksPage() {
                            src={video.image}
                            alt={video.title}
                            fill
-                           sizes="100vw"
+                           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                            className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                            referrerPolicy="no-referrer" />
                         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />

@@ -79,14 +79,13 @@ export function useAdminMutations({
   const saveOrder = async (collectionName: string, items: any[]) => {
     setIsSavingOrder(true);
     try {
-      for (const [index, item] of items.entries()) {
-        const { error } = await supabase
-          .from(collectionName)
-          .update({ order: index })
-          .eq('id', item.id);
-        if (error) throw error;
-      }
-      // Don't alert - let the caller handle it
+      const results = await Promise.all(
+        items.map((item, index) =>
+          supabase.from(collectionName).update({ order: index }).eq('id', item.id)
+        )
+      );
+      const err = results.find(r => r.error);
+      if (err) throw err.error;
       setIsSavingOrder(false);
     } catch (error) {
       setIsSavingOrder(false);

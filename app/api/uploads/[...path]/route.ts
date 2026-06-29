@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { join } from 'path';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
-import { getFileFromS3 } from '@/lib/s3';
+import { getPresignedDownloadUrl } from '@/lib/s3';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,48 +32,39 @@ export async function GET(
     const { path: pathSegments } = await params;
     const relativePath = pathSegments.join('/');
 
-    // Try S3 first
-    try {
-      const fileBuffer = await getFileFromS3(relativePath);
-      
+    // Try presigned redirect first — server не проксирует файлы, клиент идёт напрямую в S3
+    const presignResult = await Promise.race([
+      getPresignedDownloadUrl(relativePath, 3600).then(url => ({ url, error: null })),
+      new Promise<{ url: null, error: string }>((_, reject) =>
+        setTimeout(() => reject(new Error('TIMEOUT')), 5000)
+      ),
+    ]).catch((err: any) => ({ url: null, error: err.message }));
+
+    if (presignResult.url) {
       const ext = pathSegments[pathSegments.length - 1]?.split('.').pop();
-      const contentType = getContentType(ext);
-
-      return new NextResponse(new Uint8Array(fileBuffer), {
+      return new NextResponse(null, {
+        status: 302,
         headers: {
-          'Content-Type': contentType,
+          Location: presignResult.url,
           'Cache-Control': 'public, max-age=31536000, immutable',
-        },
-      });
-    } catch (s3Error: any) {
-      const isNotFound = s3Error.message === 'FILE_NOT_FOUND';
-      const isConnectionError = 
-        s3Error.code === 'ECONNREFUSED' || 
-        s3Error.code === 'ETIMEDOUT' ||
-        s3Error.message.includes('timeout') ||
-        s3Error.message.includes('connection') ||
-        s3Error.name === 'NetworkingError';
-
-      if (!isNotFound && !isConnectionError) {
-        console.error('S3 error serving file:', s3Error);
-      }
-
-      // Fallback to local
-      const localBuffer = await tryLocalFallback(pathSegments);
-      if (!localBuffer) {
-        return new NextResponse('File not found', { status: 404 });
-      }
-
-      const ext = pathSegments[pathSegments.length - 1]?.split('.').pop();
-      const contentType = getContentType(ext);
-
-      return new NextResponse(new Uint8Array(localBuffer), {
-        headers: {
-          'Content-Type': contentType,
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Content-Type': getContentType(ext),
         },
       });
     }
+
+    // Fallback to local filesystem
+    const localBuffer = await tryLocalFallback(pathSegments);
+    if (!localBuffer) {
+      return new NextResponse('File not found', { status: 404 });
+    }
+
+    const ext = pathSegments[pathSegments.length - 1]?.split('.').pop();
+    return new NextResponse(new Uint8Array(localBuffer), {
+      headers: {
+        'Content-Type': getContentType(ext),
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
+    });
   } catch (error) {
     console.error('Error serving file:', error);
     return new NextResponse('Internal Server Error', { status: 500 });

@@ -52,10 +52,10 @@ export function useAdminData({ videos, setVideos, snippets, setSnippets, lives, 
   };
 
   useEffect(() => {
-    if (loading && !hasFetched) {
+    if (!hasFetched) {
       fetchData();
     }
-  }, [loading, hasFetched]);
+  }, [hasFetched]);
 
   return { fetchData };
 }

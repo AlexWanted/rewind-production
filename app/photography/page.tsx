@@ -6,7 +6,7 @@ import Image from 'next/image';
 import PhotoModal, { PhotoData } from '@/components/PhotoModal';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { supabase, toPhotoData } from '@/lib/supabase';
+import { supabase, toPhotoData, PUBLIC_PHOTO_FIELDS } from '@/lib/supabase';
 import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 export default function PhotographyPage() {
@@ -19,7 +19,7 @@ export default function PhotographyPage() {
       try {
         const { data, error } = await supabase
           .from('photos')
-          .select('*')
+          .select(PUBLIC_PHOTO_FIELDS)
           .order('"order"', { ascending: true })
           .order('created_at', { ascending: false });
         
@@ -27,12 +27,6 @@ export default function PhotographyPage() {
         
         if (data && data.length > 0) {
           const fetchedPhotos = data.map(toPhotoData);
-          fetchedPhotos.sort((a, b) => {
-            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
-            if (a.order !== undefined) return -1;
-            if (b.order !== undefined) return 1;
-            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
-          });
 
           const allKeys: string[] = [];
           fetchedPhotos.forEach(p => {

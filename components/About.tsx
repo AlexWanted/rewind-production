@@ -31,7 +31,7 @@ export default function About() {
             className="lg:w-1/2 relative aspect-4/5 w-full max-w-md mx-auto"
           >
             <div className="absolute inset-0 bg-orange-500/20 translate-x-4 translate-y-4 rounded-sm" />
-			{photoUrl && <Image src={photoUrl} alt="Director on set" fill sizes="100vw" className="object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" referrerPolicy="no-referrer"/>}
+			{photoUrl && <Image src={photoUrl} alt="Director on set" fill sizes="(max-width: 1024px) 100vw, 448px" className="object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700" referrerPolicy="no-referrer"/>}
             <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-md px-6 py-4 border border-white/10">
               <p className="text-display uppercase tracking-widest text-sm text-orange-500 mb-1">Основано в 2018</p>
               <p className="text-white font-light text-xs uppercase tracking-wider">Базируемся в Москве</p>

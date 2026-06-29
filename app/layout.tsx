@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Rewind Production | Video Production & Photography',
-  description: 'Professional video production and photography services. Music videos, commercials, documentaries, and brand photography.',
+  title: 'rewind production | Видеопродакшен для музыкантов',
+  description: 'Профессиональный видеопродакшен для музыкантов и артистов. Клипы, сниппеты, фотосеты и концертная съёмка.',
   keywords: ['video production', 'photography', 'music videos', 'commercials', 'documentaries', 'brand photography'],
-  authors: [{ name: 'Rewind Production' }],
-  creator: 'Rewind Production',
-  publisher: 'Rewind Production',
+  authors: [{ name: 'rewind production' }],
+  creator: 'rewind production',
+  publisher: 'rewind production',
   formatDetection: {
     email: false,
     address: false,
@@ -16,16 +16,16 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://rewind-production.com'),
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: 'ru_RU',
     url: 'https://rewind-production.com',
-    title: 'Rewind Production | Video Production & Photography',
-    description: 'Professional video production and photography services. Music videos, commercials, documentaries, and brand photography.',
-    siteName: 'Rewind Production',
+    title: 'rewind  | Видеопродакшен для музыкантов',
+    description: 'Профессиональный видеопродакшен для музыкантов и артистов. Клипы, сниппеты, фотосеты и концертная съёмка.',
+    siteName: 'rewind ',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Rewind Production | Video Production & Photography',
-    description: 'Professional video production and photography services.',
+    title: 'rewind  | Видеопродакшен для музыкантов',
+    description: 'Профессиональный видеопродакшен для музыкантов и артистов. Клипы, сниппеты, фотосеты и концертная съёмка.',
   },
   robots: {
     index: true,

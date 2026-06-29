@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Play } from 'lucide-react';
 import VideoModal, { VideoData } from './VideoModal';
-import { supabase, toVideoData } from '@/lib/supabase';
+import { supabase, toVideoData, PUBLIC_VIDEO_FIELDS } from '@/lib/supabase';
 import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 const fallbackVideos: VideoData[] = [];
@@ -21,22 +21,17 @@ export default function VideoPortfolio() {
       try {
         const { data, error } = await supabase
           .from('videos')
-          .select('*')
+          .select(PUBLIC_VIDEO_FIELDS)
+          .neq('category', 'Snippet')
+          .neq('category', 'Live')
           .order('"order"', { ascending: true })
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(4);
         
         if (error) throw error;
         
         if (data && data.length > 0) {
-          let fetchedVideos = data.map(toVideoData);
-          fetchedVideos = fetchedVideos.filter(v => v.category !== 'Snippet' && v.category !== 'Live');
-          fetchedVideos.sort((a, b) => {
-            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
-            if (a.order !== undefined) return -1;
-            if (b.order !== undefined) return 1;
-            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
-          });
-          const sliced = fetchedVideos.slice(0, 4);
+          const sliced = data.map(toVideoData);
 
           const allKeys: string[] = [];
           sliced.forEach(v => {
@@ -102,7 +97,7 @@ export default function VideoPortfolio() {
                   src={video.image}
                   alt={video.title}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                   referrerPolicy="no-referrer"
                 />

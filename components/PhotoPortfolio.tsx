@@ -5,7 +5,7 @@ import { AnimatePresence, LazyMotion, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import PhotoModal, { PhotoData } from './PhotoModal';
-import { supabase, toPhotoData } from '@/lib/supabase';
+import { supabase, toPhotoData, PUBLIC_PHOTO_FIELDS } from '@/lib/supabase';
 import { presignUrls, extractKeyFromUrl } from '@/lib/presign';
 
 const fallbackPhotos: PhotoData[] = [];
@@ -20,21 +20,15 @@ export default function PhotoPortfolio() {
       try {
         const { data, error } = await supabase
           .from('photos')
-          .select('*')
+          .select(PUBLIC_PHOTO_FIELDS)
           .order('"order"', { ascending: true })
-          .order('created_at', { ascending: false });
+          .order('created_at', { ascending: false })
+          .limit(4);
         
         if (error) throw error;
         
         if (data && data.length > 0) {
-          let fetchedPhotos = data.map(toPhotoData);
-          fetchedPhotos.sort((a, b) => {
-            if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
-            if (a.order !== undefined) return -1;
-            if (b.order !== undefined) return 1;
-            return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
-          });
-          const sliced = fetchedPhotos.slice(0, 4);
+          const sliced = data.map(toPhotoData);
 
           const allKeys: string[] = [];
           sliced.forEach(p => {

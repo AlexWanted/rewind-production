@@ -96,6 +96,15 @@ export default function AdminPage() {
     setIsSavingOrder,
   });
 
+  useAdminData({
+    videos, setVideos,
+    snippets, setSnippets,
+    lives, setLives,
+    photos, setPhotos,
+    files, setFiles,
+    loading, setLoading,
+  });
+
 const { getCurrentItems } = useEditorState({
     activeTab,
     videos,

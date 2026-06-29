@@ -61,6 +61,10 @@ export interface PhotoData {
   updatedAt?: string;
 }
 
+// ponytail: поля для публичных страниц — не тянем description/director и пр.
+export const PUBLIC_VIDEO_FIELDS = 'id,title,artist,category,image,video_url,year,order,created_at';
+export const PUBLIC_PHOTO_FIELDS = 'id,images,alt,location,date,order,created_at';
+
 const S3_PUBLIC_URL = process.env.S3_PUBLIC_URL || 'https://s3.cloud.ru/bucket-8c74b8';
 
 function normalizeImageUrl(url: string): string {

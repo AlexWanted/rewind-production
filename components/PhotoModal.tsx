@@ -122,7 +122,7 @@ export default function PhotoModal({ photo, onClose }: PhotoModalProps) {
                   src={images[currentIndex]}
                   alt={`${photo.alt} - Image ${currentIndex + 1}`}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-contain pointer-events-none"
                   referrerPolicy="no-referrer"
                   draggable={false}
