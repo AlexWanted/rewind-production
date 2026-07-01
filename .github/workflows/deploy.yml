@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-deploy:
@@ -22,6 +21,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Lowercase repository name (GHCR requirement)
+        id: repo
+        run: echo "lowercase=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -32,7 +35,7 @@ jobs:
       - name: Generate image tags
         id: meta
         run: |
-          echo "tags=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
+          echo "tags=${{ env.REGISTRY }}/${{ steps.repo.outputs.lowercase }}:${{ github.sha }},${{ env.REGISTRY }}/${{ steps.repo.outputs.lowercase }}:latest" >> "$GITHUB_OUTPUT"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -53,7 +56,7 @@ jobs:
             set -e
 
             # Переменные
-            IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+            IMAGE="${{ env.REGISTRY }}/${{ steps.repo.outputs.lowercase }}:${{ github.sha }}"
             CONTAINER="nextjs-rewind"
             NETWORK="rewindcrm_default"
             ENV_FILE="/var/www/rewind-production/.env"
