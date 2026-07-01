@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.gitignore
+.env
+.planning
+.planning-debug
+README.md
+supabase-schema.sql
+firebase-blueprint.json
+firestore.rules
+tsconfig.tsbuildinfo
+uploads
+scripts
+*.md
