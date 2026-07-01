@@ -67,7 +67,6 @@ jobs:
             # Переменные
             IMAGE="${{ env.REGISTRY }}/${{ steps.repo.outputs.lowercase }}:${{ github.sha }}"
             CONTAINER="nextjs-rewind"
-            NETWORK="rewindcrm_default"
             ENV_FILE="/var/www/rewind-production/.env"
 
             # Авторизация в GHCR
@@ -80,15 +79,19 @@ jobs:
             docker stop "$CONTAINER" 2>/dev/null || true
             docker rm "$CONTAINER" 2>/dev/null || true
 
-            # Запустить новый контейнер
+            # Запустить новый контейнер (host network — nginx из rewind-crm видит localhost:3000)
             docker run -d \
               --name "$CONTAINER" \
               --restart unless-stopped \
-              --network "$NETWORK" \
+              --network host \
               --env-file "$ENV_FILE" \
               -e NODE_ENV=production \
               -e APP_URL=https://rewindproduction.ru \
               "$IMAGE"
+
+            # Дать контейнеру секунду на старт и показать логи (для отладки)
+            sleep 2
+            docker logs "$CONTAINER" --tail 20 2>&1 || true
 
             # Очистить старые образы
             docker image prune -f
