@@ -83,7 +83,7 @@ jobs:
             docker run -d \
               --name "$CONTAINER" \
               --restart unless-stopped \
-              --network host \
+              --network deploy-current_default \
               --env-file "$ENV_FILE" \
               -e NODE_ENV=production \
               -e APP_URL=https://rewindproduction.ru \
