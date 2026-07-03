@@ -13,3 +13,5 @@ const firebaseConfig = {
 // Firebase Auth (unchanged - keeping Firebase for authentication)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+export { signInWithPopup, signOut, onAuthStateChanged };
