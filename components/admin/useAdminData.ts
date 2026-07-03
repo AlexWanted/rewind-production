@@ -69,7 +69,14 @@ export function useAdminData({ videos, setVideos, snippets, setSnippets, lives, 
 
       const allKeys = [...videoKeys, ...photoKeys];
       if (allKeys.length > 0) {
-        const presigned = await presignUrls(allKeys);
+        // Batch presign requests because /api/presign has a 50-key limit
+        let presigned: Record<string, string> = {};
+        const chunkSize = 50;
+        for (let i = 0; i < allKeys.length; i += chunkSize) {
+          const chunk = allKeys.slice(i, i + chunkSize);
+          const result = await presignUrls(chunk);
+          presigned = { ...presigned, ...result };
+        }
 
         normalizedVideos.forEach(v => {
           const imgKey = extractKeyFromUrl(v.image);
