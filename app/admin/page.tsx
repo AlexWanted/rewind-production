@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { auth, googleProvider, signInWithPopup, signOut, onAuthStateChanged } from '@/lib/firebase';
 import { useAdminState } from '@/components/admin/useAdminState';
 import { useAdminMutations } from '@/components/admin/useAdminMutations';
 import { useEditorState } from '@/components/admin/useEditorState';
@@ -15,7 +16,7 @@ import { VideoEditorModal } from '@/components/admin/VideoEditorModal';
 import { PhotoEditorModal } from '@/components/admin/PhotoEditorModal';
 
 const handleLogout = async () => {
-  await supabase.auth.signOut();
+  await signOut(auth);
   window.location.href = '/';
 };
 
@@ -56,11 +57,10 @@ export default function AdminPage() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      setUser(userData?.user);
-    };
-    fetchUser();
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
   }, []);
 
   const [adminData, setAdminData] = useState<any>(null);
@@ -141,7 +141,7 @@ const { getCurrentItems } = useEditorState({
           <h1 className="text-4xl font-display uppercase mb-6">Admin Access</h1>
           <button
             type="button"
-            onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+            onClick={() => signInWithPopup(auth, googleProvider)}
             className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-sm transition-colors"
           >
             Sign in with Google
